@@ -1,0 +1,24 @@
+{
+  "name": "bytepulse",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "author": "sandeepModanwal",
+  "license": "ISC",
+  "description": "A Node.js-based backend powering an online code execution platform through integration with the Judge0 API. It provides RESTful endpoints that allow users to submit, execute, and retrieve code outputs in real-time across multiple programming languages. The backend handles API communication, submission queuing, language mapping, and error handling. Built using Express.js with modular architecture, the system is containerized using Docker for easy deployment and scalability. ",
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.3",
+    "prisma": "^6.6.0"
+  }
+}
