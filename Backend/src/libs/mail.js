@@ -1,6 +1,6 @@
 import Mailgen from "mailgen";
 import nodemailer from "nodemailer";
-import { ApiError } from "../libs/api-error";
+import { ApiError } from "../libs/api-error.js";
 
 const sendMail = async (options) => {
   const mailGenerator = new Mailgen({
@@ -10,21 +10,21 @@ const sendMail = async (options) => {
       link: "https://mailgen.js/",
     },
   });
-  const emailHtml = mailGenerator.generate(option.mailGenContent);
-  const emailText = mailGenerator.generatePlaintext(option.mailGenContent);
+  const emailHtml = mailGenerator.generate(options.mailGenContent);
+  const emailText = mailGenerator.generatePlaintext(options.mailGenContent);
 
   const transporter = nodemailer.createTransport({
-    host: process.env.MAILTRAP_SMTP_HOST,
+    host: process.env.SENDGRID_SMTP_HOST,
     port: 587,
-    secure: false, // true for port 465, false for other ports
+    secure: false,
     auth: {
-      user: process.env.MAILTRAP_SMTP_USER,
-      pass: process.env.MAILTRAP_SMTP_PASS,
+      user: process.env.SENDGRID_SMTP_USER, // must be "apikey"
+      pass: process.env.SENDGRID_SMTP_PASS, // your SendGrid API key
     },
   });
 
   const mail = {
-    from: "mail.BytePulse@example.com", // sender address
+    from: "bytespulsedev@gmail.com", // sender address
     to: options.email, // list of receivers
     subject: options.subject, // Subject line
     text: emailText, // plain text body
@@ -32,7 +32,14 @@ const sendMail = async (options) => {
   };
 
   try {
-    await transporter.sendMail(mail);
+    transporter.sendMail(mail, (error, info) => {
+      if (error) {
+        console.log("Error:", error);
+        throw new ApiError(500, error.message);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
   } catch (error) {
     throw new ApiError(500, error.message);
   }
@@ -42,10 +49,7 @@ const emailVerificationMailGenContent = (username, verificationUrl) => {
   return {
     body: {
       name: username,
-      intro: {
-        color: "#999999",
-        text: "Welcome to BytePulse! We're very excited to have you on board.",
-      },
+      intro: "Welcome to BytePulse! We're very excited to have you on board.",
       action: {
         instructions: "To get started with Mailgen, please click here:",
         button: {
@@ -60,18 +64,18 @@ const emailVerificationMailGenContent = (username, verificationUrl) => {
   };
 };
 
-const resetPasswordMailGenContent = (username, resetPasswordUrl) => {
+const forgotPasswordMailGenContent = (username, forgotPasswordUrl) => {
   return {
     body: {
       name: username,
       intro:
-        "You have received this email because you have requested to reset your password.",
+        "You have received this email because you have requested to forgot your password.",
       action: {
         instructions: "To reset your password, please click here:",
         button: {
           color: "#22BC66", // Optional action button color
-          text: "Reset your password",
-          link: resetPasswordUrl,
+          text: "Forgot your password",
+          link: forgotPasswordUrl,
         },
       },
       outro:
@@ -83,7 +87,7 @@ const resetPasswordMailGenContent = (username, resetPasswordUrl) => {
 export {
   sendMail,
   emailVerificationMailGenContent,
-  resetPasswordMailGenContent,
+  forgotPasswordMailGenContent,
 };
 
 // import { sendMail, emailVerificationMailGenContent } from "./mail.js";

@@ -1,5 +1,6 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -13,12 +14,15 @@ const app = express();
 // ));
 app.use(express.json());
 app.use(urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // import routes
 
-import helthCheckRoute from "./routes/helthCheck.route";
+import helthCheckRoute from "./routes/helthCheck.route.js";
+import userRegistrationRoute from "./routes/auth.route.js";
 
-app.get("api/v1/helthcheck", helthCheckRoute);
+app.use("/api/v1/helthcheck", helthCheckRoute);
+app.use("/api/v1/auth", userRegistrationRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend");

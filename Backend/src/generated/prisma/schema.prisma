@@ -20,12 +20,18 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String?
-  email     String   @unique
-  role      UserRole @default(USER)
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  avatar    String
+  id                     String    @id @default(uuid())
+  username               String?
+  email                  String    @unique
+  role                   UserRole  @default(USER)
+  password               String
+  emailVerificationToken String?
+  emailTokenExpiry       DateTime?
+  isEmailVerification    Boolean   @default(false)
+  refreshToken           String?
+  forgotPasswordToken    String?
+  forgotPasswordExpiry   DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  avatar                 String?
 }
