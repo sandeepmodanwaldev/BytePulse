@@ -7,6 +7,7 @@ import {
   logout,
   forgotPassword,
   resetPassword,
+  refeshToken,
 } from "../controller/auth.controller.js";
 import {
   userRegistrationValidator,
@@ -36,5 +37,6 @@ router.post(
   validator,
   resetPassword
 );
+router.get("/refeshToken", refeshToken);
 
 export default router;

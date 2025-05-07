@@ -126,6 +126,13 @@ export const login = async (req, res) => {
         .status(400)
         .json(new ApiError(400, "Invalide Email or Password "));
     }
+
+    if (!user.isEmailVerification) {
+      return res
+        .status(403)
+        .json(new ApiError(403, "Verify your email first "));
+    }
+
     const isMatch = await compare(password, user.password);
 
     if (!isMatch) {
@@ -141,10 +148,10 @@ export const login = async (req, res) => {
       },
       process.env.JWT_SECRAT,
       {
-        expiresIn: "24h",
+        expiresIn: "15m",
       }
     );
-    const refeshToken = jwt.sign(
+    const refreshToken = jwt.sign(
       {
         id: user.id,
       },
@@ -159,22 +166,21 @@ export const login = async (req, res) => {
         email: user.email,
       },
       data: {
-        refreshToken: refeshToken,
+        refreshToken: refreshToken,
       },
     });
 
     const cookieOptins = {
       httpOnly: true,
       // secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
       sameSite: "Strict",
     };
     res.cookie("accessToken", accessToken, cookieOptins);
-    res.cookie("refeshToken", refeshToken, cookieOptins);
+    res.cookie("refreshToken", refreshToken, cookieOptins);
 
     res.status(200).json(new ApiResponse(200, updateduser, "Login successful"));
   } catch (error) {
-    res.status(500).json(500, "login error", error.message);
+    res.status(500).json(new ApiError(500, "login error", error.message));
   }
 };
 
@@ -208,12 +214,13 @@ export const profile = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    const cookieOptins = {
+    const cookieOptions = {
       httpOnly: true,
       // secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "Strict",
     };
-    res.clearCookie("accessToken", cookieOptins);
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
     res.status(200).json(new ApiResponse(200, null, "Logout successful"));
   } catch (error) {
     res
@@ -252,7 +259,7 @@ export const forgotPassword = async (req, res) => {
       user.username,
       forgotPasswordUrl
     );
-    sendMail({
+    await sendMail({
       email,
       subject: "Forgot your password ",
       mailGenContent,
@@ -312,4 +319,56 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-export const refeshToken = async (req, res) => {};
+export const refeshToken = async (req, res) => {
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+
+  if (!incomingRefreshToken) {
+    return res.status(401).json(new ApiError(401, "unauthorized request"));
+  }
+
+  try {
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.JWT_REFESH_SECRAT
+    );
+
+    const user = await db.user.findUnique({
+      where: {
+        id: decodedToken.id,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json(new ApiError(401, "Invalide refresh token "));
+    }
+
+    // console.log("User Refresh Token", user.refreshToken);
+    // console.log("Refesh Token", incomingRefreshToken);
+
+    if (incomingRefreshToken !== user.refreshToken) {
+      return res
+        .status(401)
+        .json(new ApiError(401, "Refresh token is expire or user"));
+    }
+
+    const cookieOptins = {
+      httpOnly: true,
+      // secure: true,
+      sameSite: "Strict",
+    };
+
+    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
+      user.id
+    );
+
+    res.cookie("accessToken", accessToken, cookieOptins);
+    res.cookie("refreshToken", refreshToken, cookieOptins);
+
+    res.status(200).json(new ApiResponse(200, null, "Access token Refresh"));
+  } catch (error) {
+    res
+      .status(500)
+      .json(new ApiError(500, "Error Access token Refresh ", error.message));
+  }
+};
