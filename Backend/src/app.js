@@ -20,9 +20,11 @@ app.use(cookieParser());
 
 import helthCheckRoute from "./routes/helthCheck.route.js";
 import userRegistrationRoute from "./routes/auth.route.js";
+import problemRoute from "./routes/problem.route.js";
 
 app.use("/api/v1/helthcheck", helthCheckRoute);
 app.use("/api/v1/auth", userRegistrationRoute);
+app.use("/api/v1/problems", problemRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend");

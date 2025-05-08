@@ -18,10 +18,9 @@ export const generateAccessAndRefereshTokens = async (userId) => {
     const accessToken = jwt.sign(
       {
         id: user.id,
-        email: user.email,
         role: user.role,
       },
-      process.env.JWT_SECRAT,
+      process.env.JWT_ACCESS_SECRAT,
       { expiresIn: "15m" }
     );
 
