@@ -1,8 +1,7 @@
 import axios from "axios";
 import { ApiError } from "./api-error.js";
 
-const baseUrl = process.env.JUDGE0_BASE_URL || "http://localhost:2358";
-console.log("Base URL:", baseUrl);
+const baseUrl = process.env.JUDGE0_BASE_URL;
 
 export const getJudge0LanguageId = async (language) => {
   try {
@@ -28,7 +27,6 @@ export const submitBatch = async (submissions) => {
         submissions,
       }
     );
-    console.log("Submission Rusults :", data);
 
     return data;
   } catch (error) {
@@ -50,10 +48,10 @@ export const pollBatchResults = async (tokens) => {
     const results = data.submissions;
 
     const isAllDone = results.every((r, i) => {
-      if (!r || !r.status) {
-        console.warn(`Invalid submission at index ${i}:`, r);
-        return false;
-      }
+      // if (!r || !r.status) {
+      //   console.warn(`Invalid submission at index ${i}:`, r);
+      //   return false;
+      // }
       return r.status.id !== 1 && r.status.id !== 2;
     });
 
