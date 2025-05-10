@@ -264,4 +264,6 @@ export const deleteProblem = async (req, res) => {
       .json(new ApiError(500, "Error Fetching Problem", error.message));
   }
 };
-export const getAllProblemSolveByUser = async (req, res) => {};
+export const getAllProblemSolveByUser = async (req, res) => {
+  
+};
