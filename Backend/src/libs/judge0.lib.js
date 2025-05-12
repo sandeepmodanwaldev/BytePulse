@@ -12,6 +12,7 @@ export const getJudge0LanguageId = async (language) => {
       acc[key] = lang.id;
       return acc;
     }, {});
+    console.log("languageMap-------------------------------", languageMap);
 
     return languageMap[language.toUpperCase()];
   } catch (error) {
@@ -57,5 +58,22 @@ export const pollBatchResults = async (tokens) => {
 
     if (isAllDone) return results;
     await sleep(1000);
+  }
+};
+export const getJudge0LanguageNameById = async (id) => {
+  try {
+    const { data } = await axios.get(`${baseUrl}/languages`);
+
+    for (const lang of data) {
+      if (lang.id === id) {
+        // "JAVASCRIPT (NODE.JS 12.14.0)" => "JAVASCRIPT"
+        const baseName = lang.name.split(" ")[0].toUpperCase();
+        return baseName;
+      }
+    }
+
+    throw new Error(`Language ID ${id} not found`);
+  } catch (error) {
+    throw new Error("Error fetching language name: " + error.message);
   }
 };
