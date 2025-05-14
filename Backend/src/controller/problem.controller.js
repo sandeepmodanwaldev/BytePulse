@@ -95,7 +95,15 @@ export const createProblem = async (req, res) => {
 };
 export const getAllProblem = async (req, res) => {
   try {
-    const allProblem = await db.problem.findMany();
+    const allProblem = await db.problem.findMany({
+      include: {
+        solvedBy: {
+          where: {
+            userId: req.user.id,
+          },
+        },
+      },
+    });
     if (!allProblem) {
       return res.status(404).json(new ApiError(404, "No Problem found"));
     }
@@ -265,5 +273,29 @@ export const deleteProblem = async (req, res) => {
   }
 };
 export const getAllProblemSolveByUser = async (req, res) => {
-  
+  try {
+    const allProblem = await db.problem.findMany({
+      where: {
+        solvedBy: {
+          some: {
+            userId: req.user.id,
+          },
+        },
+      },
+      include: {
+        solvedBy: {
+          where: {
+            userId: req.user.id,
+          },
+        },
+      },
+    });
+    res
+      .status(200)
+      .json(new ApiResponse(200, allProblem, "Problem fetch Successfully"));
+  } catch (error) {
+    res
+      .status(500)
+      .json(new ApiError(500, "Error fetching AllProblem", error.message));
+  }
 };

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isLoggedIn, ckeckAdmin } from "../middleware/auth.middleware.js";
+import { isLoggedIn, checkAdmin } from "../middleware/auth.middleware.js";
 import {
   createProblem,
   getAllProblem,
@@ -10,10 +10,10 @@ import {
 } from "../controller/problem.controller.js";
 const route = Router();
 
-route.post("/create-problem", isLoggedIn, ckeckAdmin, createProblem);
+route.post("/create-problem", isLoggedIn, checkAdmin, createProblem);
 route.get("/get-all-problem", isLoggedIn, getAllProblem);
 route.get("/get-problem/:id", isLoggedIn, getProblemById);
-route.put("/update-problem/:id", isLoggedIn, ckeckAdmin, updateProblem);
-route.delete("/detele-problem/:id", isLoggedIn, ckeckAdmin, deleteProblem);
-route.get("/get-solved_problems", isLoggedIn, getAllProblemSolveByUser);
+route.put("/update-problem/:id", isLoggedIn, checkAdmin, updateProblem);
+route.delete("/detele-problem/:id", isLoggedIn, checkAdmin, deleteProblem);
+route.get("/get-solved-problem", isLoggedIn, getAllProblemSolveByUser);
 export default route;

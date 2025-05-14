@@ -11,7 +11,9 @@ export const executeCode = async (req, res) => {
   const { source_code, language_id, stdin, expected_outputs, problemId } =
     req.body;
   const userId = req.user.id;
-
+  if (!userId) {
+    return res.status(401).json(new ApiError(401, "Unauthorized request"));
+  }
   try {
     // Validate test cases
     if (
@@ -59,7 +61,6 @@ export const executeCode = async (req, res) => {
         testCase: i + 1,
         passed,
         stdout,
-        language: "",
         expected: expected_output,
         stderr: result.stderr || null,
         compile_output: result.compile_output || null,
