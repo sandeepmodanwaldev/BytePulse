@@ -372,3 +372,20 @@ export const refeshToken = async (req, res) => {
       .json(new ApiError(500, "Error Access token Refresh ", error.message));
   }
 };
+
+export const checkuser = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json(new ApiError(401, "Unauthorized"));
+    }
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, req.user, "User authenticated successfully"));
+  } catch (error) {
+    console.error("Error checking user:", error);
+    res
+      .status(500)
+      .json(new ApiError(500, "Error checking user", error.message));
+  }
+};

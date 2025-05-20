@@ -8,6 +8,7 @@ import {
   forgotPassword,
   resetPassword,
   refeshToken,
+  checkuser,
 } from "../controller/auth.controller.js";
 import {
   userRegistrationValidator,
@@ -25,6 +26,7 @@ router.get("/verify/:emailVerificationToken", verifyEmail);
 router.post("/login", userLoginValidator(), validator, login);
 router.get("/profile", isLoggedIn, profile);
 router.get("/logout", isLoggedIn, logout);
+router.get("/check", checkuser);
 router.post(
   "/request-forgot-password",
   forgotPasswordRequestValidator(),
