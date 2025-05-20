@@ -186,8 +186,6 @@ export const login = async (req, res) => {
 
 export const profile = async (req, res) => {
   try {
-    console.log(req.user.id);
-
     const user = await db.user.findUnique({
       where: {
         id: req.user.id,
@@ -375,6 +373,8 @@ export const refeshToken = async (req, res) => {
 
 export const checkuser = async (req, res) => {
   try {
+    console.log("user :", req.user);
+
     if (!req.user) {
       return res.status(401).json(new ApiError(401, "Unauthorized"));
     }

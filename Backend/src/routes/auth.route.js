@@ -26,7 +26,7 @@ router.get("/verify/:emailVerificationToken", verifyEmail);
 router.post("/login", userLoginValidator(), validator, login);
 router.get("/profile", isLoggedIn, profile);
 router.get("/logout", isLoggedIn, logout);
-router.get("/check", checkuser);
+router.get("/check", isLoggedIn, checkuser);
 router.post(
   "/request-forgot-password",
   forgotPasswordRequestValidator(),
