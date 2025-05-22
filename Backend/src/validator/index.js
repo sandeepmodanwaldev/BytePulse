@@ -87,12 +87,7 @@ const forgotPasswordValidator = () => {
       .isString()
       .isLength({ min: 8, max: 25 })
       .withMessage("Password must be between 8 and 25 characters")
-      // .matches(
-      //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,25}$/
-      // )
-      // .withMessage(
-      //   "Password must contain at least one letter, one number, and one special character"
-      // )
+
       .notEmpty()
       .withMessage("Password cannot be empty"),
 

@@ -11,6 +11,7 @@ import {
 } from "../libs/mail.js";
 import crypto from "crypto";
 import { generateAccessAndRefereshTokens } from "../libs/generate-access-and-referesh-tokens.js";
+import { log } from "console";
 
 export const registration = async (req, res) => {
   const { username, email, password } = req.body;
@@ -45,7 +46,7 @@ export const registration = async (req, res) => {
         .status(400)
         .json(new ApiResponse(400, null, " User Registration Error"));
     }
-    const emailUrl = `${process.env.BASE_URL}/api/v1/auth/verify/${emailVerificationToken}`;
+    const emailUrl = `${process.env.BASE_URL}/verify-email/${emailVerificationToken}`;
     const mailGenContent = emailVerificationMailGenContent(username, emailUrl);
     await sendMail({ email, subject: "Verify your email", mailGenContent });
     return res
@@ -71,18 +72,17 @@ export const registration = async (req, res) => {
 };
 export const verifyEmail = async (req, res) => {
   const { emailVerificationToken } = req.params;
+
   try {
     const user = await db.user.findFirst({
       where: {
         emailVerificationToken,
         emailTokenExpiry: {
-          gt: new Date(), // token expiry must be in the future
+          gt: new Date(),
         },
       },
     });
-    if (!user) {
-      return res.status(404).json(new ApiError(404, "User not found"));
-    }
+
     const updatedUser = await db.user.update({
       where: {
         id: user.id,
@@ -250,8 +250,7 @@ export const forgotPassword = async (req, res) => {
       },
     });
 
-    const forgotPasswordUrl = `${process.env.BASE_URL}/api/v1/auth/forgot-password/${forgotToken}`;
-    console.log(forgotPasswordUrl);
+    const forgotPasswordUrl = `${process.env.BASE_URL}/reset-password/${forgotToken}`;
 
     const mailGenContent = forgotPasswordMailGenContent(
       user.username,
@@ -278,7 +277,6 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   const { newPassword } = req.body;
   const { token } = req.params;
-  console.log(token);
 
   try {
     const user = await db.user.findFirst({
@@ -290,7 +288,9 @@ export const resetPassword = async (req, res) => {
       },
     });
 
-    // console.log("email is ", user.email);
+    if (!user.isEmailVerification) {
+      return res.status(400).json(new ApiError(400, "Email not verified"));
+    }
 
     if (!user) {
       return res.status(400).json(new ApiError(400, "Link invalid"));
@@ -341,9 +341,6 @@ export const refeshToken = async (req, res) => {
       return res.status(401).json(new ApiError(401, "Invalide refresh token "));
     }
 
-    // console.log("User Refresh Token", user.refreshToken);
-    // console.log("Refesh Token", incomingRefreshToken);
-
     if (incomingRefreshToken !== user.refreshToken) {
       return res
         .status(401)
@@ -373,8 +370,6 @@ export const refeshToken = async (req, res) => {
 
 export const checkuser = async (req, res) => {
   try {
-    console.log("user :", req.user);
-
     if (!req.user) {
       return res.status(401).json(new ApiError(401, "Unauthorized"));
     }
