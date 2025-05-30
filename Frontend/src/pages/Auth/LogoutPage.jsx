@@ -14,15 +14,13 @@ function LogoutPage() {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center bg-[#0f0f1a]">
-      <button onClick={handleLogout} className="btn btn-secondary">
-        {isloggingIn ? (
-          <span className="loading loading-spinner text-white"></span>
-        ) : (
-          "Logout"
-        )}
-      </button>
-    </div>
+    <button onClick={handleLogout} className="btn btn-secondary">
+      {isloggingIn ? (
+        <span className="loading loading-spinner text-white"></span>
+      ) : (
+        "Logout"
+      )}
+    </button>
   );
 }
 

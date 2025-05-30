@@ -4,19 +4,22 @@ import axiosInstance from "../libs/axiosInstance";
 
 export const useAuthStore = create((set) => ({
   authUser: null,
+  profile: null,
   isSigninUp: false,
   isloggingIn: false,
-  isCheckingAuth: false,
+  isCheckingAuth: true,
   islogoutting: false,
   isForgottingPassword: false,
   isResettingPassword: false,
   isVerifying: false,
+  isLoadingProfile: false,
+  profileError: null,
 
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
       const res = await axiosInstance.get(`/auth/check`);
-      console.log("CheckAuth response", res.data);
+
       set({ authUser: res.data.data });
     } catch (error) {
       console.log("CheckAuth error", error);
@@ -25,9 +28,23 @@ export const useAuthStore = create((set) => ({
       set({ isCheckingAuth: false });
     }
   },
-  signup: async (data, nevigate) => {
-    console.log("data:", data);
 
+  fetchProfile: async () => {
+    set({ isLoadingProfile: true, profileError: null });
+    try {
+      // Agar aapka backend me /auth/profile hai to use karo, warna /auth/check bhi ho sakta hai
+      const res = await axiosInstance.get(`/auth/profile`);
+      set({ profile: res.data.data, isLoadingProfile: false });
+    } catch (error) {
+      set({
+        profileError: error.response?.data?.message || error.message,
+        isLoadingProfile: false,
+      });
+      throw error;
+    }
+  },
+
+  signup: async (data, nevigate) => {
     set({ isSigninUp: true });
     try {
       const res = await axiosInstance.post(`/auth/register`, data);
@@ -40,37 +57,37 @@ export const useAuthStore = create((set) => ({
       set({ isSigninUp: false });
     }
   },
+
   login: async (data, nevigate) => {
     set({ isloggingIn: true });
     try {
       const res = await axiosInstance.post(`/auth/login`, data);
-      console.log("Login response", res.data.data);
       set({ authUser: res.data.data });
       toast.success(res.data.message);
       nevigate("/dashboard");
     } catch (error) {
-      console.log("Login error", error);
       toast.error(error.response.data.message);
     } finally {
       set({ isloggingIn: false });
     }
   },
+
   logout: async (navigate) => {
     try {
       set({ islogoutting: true });
       await axiosInstance.get(`/auth/logout`, {
         withCredentials: true,
       });
-      set({ authUser: null });
+      set({ authUser: null, profile: null });
       toast.success("Logout successful");
       navigate("/");
     } catch (error) {
-      console.error("Logout failed:", error);
       toast.error(error.response?.data?.message || "Logout failed");
     } finally {
       set({ islogoutting: false });
     }
   },
+
   forgotPassword: async (data) => {
     set({ isForgottingPassword: true });
     try {
@@ -85,6 +102,7 @@ export const useAuthStore = create((set) => ({
       set({ isForgottingPassword: false });
     }
   },
+
   resetPassword: async (token, data, nevigate) => {
     set({ isResettingPassword: true });
     try {
@@ -100,16 +118,13 @@ export const useAuthStore = create((set) => ({
       set({ isResettingPassword: false });
     }
   },
-  verifyEmail: async (emailVerificationToken, navigate) => {
-    console.log("emailVerificationToken", emailVerificationToken);
 
+  verifyEmail: async (emailVerificationToken, navigate) => {
     set({ isVerifying: true });
     try {
       const res = await axiosInstance.get(
         `/auth/verify/${emailVerificationToken}`
       );
-      console.log("Email verification response", res.data);
-
       toast.success(res.data.message || "Email verified!");
       navigate("/login");
     } catch (error) {

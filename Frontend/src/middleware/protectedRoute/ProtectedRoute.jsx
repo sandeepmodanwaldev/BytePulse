@@ -1,6 +1,6 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
-// import { useAuthStore } from "../store/useAuthStore.js";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const ProtectedRoute = () => {
   const { authUser, isCheckingAuth } = useAuthStore();

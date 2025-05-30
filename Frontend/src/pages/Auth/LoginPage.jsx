@@ -6,7 +6,7 @@ import { Eye, EyeOff, KeyRound, Mail, User } from "lucide-react";
 import { loginSchema } from "../../schemas/authSchema.js";
 import { useAuthStore } from "../../store/useAuthStore.js";
 
-function loginPage() {
+function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { login, isloggingIn } = useAuthStore();
@@ -18,7 +18,7 @@ function loginPage() {
     formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(loginSchema),
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const onSubmit = async (data) => {
@@ -31,8 +31,8 @@ function loginPage() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <div className="bg-[#0f0f1a] w-96 p-6 rounded-xl shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-4 text-white">
+      <div className="dark:text-[#EDEDED] bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200 w-96 p-6 ">
+        <h2 className="text-3xl font-bold text-center mb-4 text-black dark:text-white">
           Login
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -40,7 +40,7 @@ function loginPage() {
           <div>
             <label
               htmlFor="email"
-              className="text-white flex items-center gap-2"
+              className="dark:text-[#FFFFFF] text-black flex items-center gap-2"
             >
               Email
             </label>
@@ -48,7 +48,7 @@ function loginPage() {
               id="email"
               type="email"
               {...register("email")}
-              className={`w-full input mt-1 ${
+              className={`w-full input mt-1 bg-white shadow-2xl  dark:bg-gray-900 rounded-lg border border-gray-500 text-gray-800 dark:text-white placeholder-gray-700 dark:placeholder-gray-300 ${
                 errors.email ? "input-error" : ""
               }`}
               placeholder="Enter email"
@@ -64,7 +64,7 @@ function loginPage() {
           <div className="relative">
             <label
               htmlFor="password"
-              className="text-white flex items-center gap-2"
+              className="dark:text-[#FFFFFF] text-black flex items-center gap-2 "
             >
               Password
             </label>
@@ -72,7 +72,7 @@ function loginPage() {
               id="password"
               type={showPassword ? "text" : "password"}
               {...register("password")}
-              className={`w-full input mt-1 pl-3 ${
+              className={`w-full input mt-1 bg-white shadow-2xl  dark:bg-gray-900 rounded-lg border border-gray-500 text-gray-800 dark:text-white placeholder-gray-700 dark:placeholder-gray-300 ${
                 errors.password ? "input-error" : ""
               }`}
               placeholder="Enter password"
@@ -94,7 +94,7 @@ function loginPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isloggingIn || !isValid}
+            disabled={isloggingIn}
             className="btn btn-primary w-full"
           >
             {isloggingIn ? (
@@ -104,8 +104,10 @@ function loginPage() {
             )}
           </button>
         </form>
-
-        <p className="text-sm text-center text-white mt-4">
+        <p className="text-sm mt-4 text-center dark:text-[#FFFFFF] text-black">
+          <Link to="/forgot-password">forgot Password?</Link>
+        </p>
+        <p className="text-sm text-center dark:text-[#FFFFFF] text-black mt-2">
           Don't have an account?{" "}
           <Link to="/signup" className="text-primary font-semibold">
             SignUp
@@ -116,4 +118,4 @@ function loginPage() {
   );
 }
 
-export default loginPage;
+export default LoginPage;
