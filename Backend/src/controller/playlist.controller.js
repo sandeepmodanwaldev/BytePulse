@@ -153,6 +153,7 @@ export const deleteProblemFromPlaylist = async (req, res) => {
   const userId = req.user.id;
   const { playlistId } = req.params;
   const { problemIds } = req.body;
+  console.log(problemIds);
 
   if (!userId) {
     return res.status(400).json(new ApiError(400, "User id not found"));
@@ -193,5 +194,26 @@ export const deleteProblemFromPlaylist = async (req, res) => {
           error.message
         )
       );
+  }
+};
+
+export const getPlaylistCount = async (req, res) => {
+  try {
+    const count = await db.playlist.count({
+      where: {
+        userId: req.user.id,
+      },
+    });
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, { count }, "Playlist count fetched successfully")
+      );
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json(new ApiError(500, "Failed to fetch playlist count", error.message));
   }
 };

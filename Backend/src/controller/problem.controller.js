@@ -299,3 +299,61 @@ export const getAllProblemSolveByUser = async (req, res) => {
       .json(new ApiError(500, "Error fetching AllProblem", error.message));
   }
 };
+
+export const getSolvedProblemCount = async (req, res) => {
+  try {
+    const solvedCount = await db.problemSolved.count({
+      where: {
+        userId: req.user.id,
+      },
+    });
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { count: solvedCount },
+          "Solved problem count fetched"
+        )
+      );
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json(
+        new ApiError(500, "Failed to fetch solved problem count", error.message)
+      );
+  }
+};
+
+export const getAccuracy = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const [solvedCount, totalCount] = await Promise.all([
+      db.problemSolved.count({
+        where: { userId },
+      }),
+      db.problem.count(),
+    ]);
+
+    const accuracy = totalCount > 0 ? (solvedCount / totalCount) * 100 : 0;
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          solvedCount,
+          totalCount,
+          accuracy: accuracy.toFixed(2) + "%",
+        },
+        "Accuracy calculated successfully"
+      )
+    );
+  } catch (error) {
+    return res
+      .status(500)
+      .json(new ApiError(500, "Failed to calculate accuracy", error.message));
+  }
+};

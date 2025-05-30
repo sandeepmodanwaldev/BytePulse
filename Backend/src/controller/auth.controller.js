@@ -48,7 +48,13 @@ export const registration = async (req, res) => {
     }
     const emailUrl = `${process.env.BASE_URL}/verify-email/${emailVerificationToken}`;
     const mailGenContent = emailVerificationMailGenContent(username, emailUrl);
-    await sendMail({ email, subject: "Verify your email", mailGenContent });
+
+    await sendMail({
+      email,
+      subject: "Verify your email",
+      mailGenContent,
+    });
+
     return res
       .status(201)
       .json(
@@ -145,6 +151,7 @@ export const login = async (req, res) => {
       {
         id: user.id,
         role: user.role,
+        name: user.username,
       },
       process.env.JWT_ACCESS_SECRAT,
       {
