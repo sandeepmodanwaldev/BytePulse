@@ -27,10 +27,10 @@ import { useSubmissionStore } from "../store/useSubmissionStore";
 import Submission from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
 import useThemeStore from "../store/useThemeStore";
+import PerformanceChart from "../components/PerformanceChart";
+import { set } from "react-hook-form";
 
 const ProblemPage = () => {
-  console.log(useExecutionStore());
-
   const { id } = useParams();
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
 
@@ -43,10 +43,14 @@ const ProblemPage = () => {
   } = useSubmissionStore();
 
   const [code, setCode] = useState("");
+  // const [codeSolution, setCodeSolution] = useState("");
   const [activeTab, setActiveTab] = useState("description");
   const [selectedLanguage, setSelectedLanguage] = useState("JAVASCRIPT");
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
+  const [time, setTime] = useState([]);
+  const [memory, setMemory] = useState([]);
+  const [isProblemSolved, setIsProblemSolved] = useState(false);
 
   const { executeCode, submission, isExecuting, isRunning, runCodeOnly } =
     useExecutionStore();
@@ -71,14 +75,23 @@ const ProblemPage = () => {
       setCode(
         problem.codeSnippets?.[selectedLanguage] || submission?.sourceCode || ""
       );
+      // setCodeSolution(problem.referenceSolution?.[selectedLanguage] || "");
       setTestCases(
         problem.testcases?.map((tc) => ({
           input: tc.input,
           output: tc.output,
         })) || []
       );
+      if (submission?.testcases) {
+        setTime(JSON.parse(submission?.time || []));
+        setMemory(JSON.parse(submission?.memory || []));
+        setIsProblemSolved(
+          submission?.testcases?.every((tc) => tc.passed === true)
+        );
+      }
     }
-  }, [problem, selectedLanguage]);
+  }, [problem, selectedLanguage, submission]);
+  // console.log("code", code + "   " + codeSolution);
 
   useEffect(() => {
     if (activeTab === "submissions" && id) {
@@ -92,7 +105,7 @@ const ProblemPage = () => {
     setCode(problem.codeSnippets?.[lang] || "");
   };
 
-  const handleRunCode = (e) => {
+  const handleSubmitCode = (e) => {
     e.preventDefault();
     try {
       const language_id = getLanguageId(selectedLanguage);
@@ -131,7 +144,7 @@ const ProblemPage = () => {
       case "description":
         return (
           <div className="prose max-w-none ">
-            <p className="text-lg mb-6">{problem.description}</p>
+            <p className="text-lg  mb-6">{problem.description}</p>
 
             {problem.examples && (
               <>
@@ -325,7 +338,11 @@ const ProblemPage = () => {
                 <h1 className="md:text-4xl texl-xl mb-4 font-bold">
                   {problem.title}
                 </h1>
-                {renderTabContent()}
+                {isProblemSolved === true ? (
+                  <PerformanceChart times={time} memory={memory} />
+                ) : (
+                  renderTabContent()
+                )}
               </div>
             </div>
           </div>
@@ -379,7 +396,7 @@ const ProblemPage = () => {
                   </button>
                   <button
                     className="btn btn-primary gap-2"
-                    onClick={handleRunCode}
+                    onClick={handleSubmitCode}
                     disabled={isExecuting}
                   >
                     {isExecuting ? (
