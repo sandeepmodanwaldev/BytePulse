@@ -44,7 +44,7 @@ function Navbar() {
                   className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 text-gray-50 dark:bg-gray-800  dark:text-gray-100 rounded-box w-52 space-y-3"
                 >
                   <li>
-                    <p className="text-base font-semibold ml-6 overflow-auto select-none hover:none ">
+                    <p className="text-base font-semibold ml-6 overflow-auto select-none hover:none font-playpen">
                       {authUser?.name}
                     </p>
                     <hr className="border-gray-200 dark:border-gray-600" />
@@ -52,9 +52,9 @@ function Navbar() {
                   <li>
                     <Link
                       to="/profile"
-                      className="hover:bg-primary hover:text-white text-base font-semibold dark:hover:bg-blue-600"
+                      className="hover:bg-primary font-inter hover:text-white text-base font-semibold dark:hover:bg-blue-600"
                     >
-                      <User className="w-4 h-4 mr-2" />
+                      <User className="w-4 h-4 mr-2 " />
                       My Profile
                     </Link>
                   </li>
@@ -62,7 +62,7 @@ function Navbar() {
                     <li>
                       <Link
                         to="/add-problem"
-                        className="hover:bg-primary hover:text-white text-base font-semibold dark:hover:bg-blue-600"
+                        className="hover:bg-primary font-inter hover:text-white text-base font-semibold dark:hover:bg-blue-600"
                       >
                         <Code className="w-4 h-4 mr-1" />
                         Add Problem
@@ -77,7 +77,7 @@ function Navbar() {
             </div>
           ) : (
             <Link to="/login">
-              <button className="bg-blue-500 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-xl">
+              <button className="bg-blue-500 font-inter dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-xl">
                 Login
               </button>
             </Link>

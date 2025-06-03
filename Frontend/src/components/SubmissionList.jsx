@@ -64,7 +64,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
         return (
           <div
             key={submission.id}
-            className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow rounded-lg"
+            className="card bg-white dark:bg-gray-900 shadow-md border border-gray-200 dark:border-gray-500 hover:shadow-xl transition-shadow rounded-2xl"
           >
             <div className="card-body p-4">
               <div className="flex items-center justify-between">
@@ -81,22 +81,22 @@ const SubmissionsList = ({ submissions, isLoading }) => {
                       <span className="font-semibold">{submission.status}</span>
                     </div>
                   )}
-                  <div className="badge badge-neutral">
+                  <div className=" rounded-2xl px-1 py-0.5 bg-yellow-300 font-inter text-black ">
                     {submission.language}
                   </div>
                 </div>
 
                 {/* Right Section: Runtime, Memory, and Date */}
                 <div className="flex items-center gap-4 text-base-content/70">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-black dark:text-white font-inter">
                     <Clock className="w-4 h-4" />
                     <span>{avgTime.toFixed(3)} s</span>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-black dark:text-white font-inter">
                     <Memory className="w-4 h-4" />
                     <span>{avgMemory.toFixed(0)} KB</span>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-black dark:text-white font-inter">
                     <Calendar className="w-4 h-4" />
                     <span>
                       {new Date(submission.createdAt).toLocaleDateString()}

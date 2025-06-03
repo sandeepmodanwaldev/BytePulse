@@ -31,11 +31,11 @@ const SubmissionResults = ({ submission }) => {
     <div className="space-y-6">
       {/* Overall Status */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="card bg-base-200 shadow-lg">
+        <div className="card bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  shadow-2xl rounded-lg">
           <div className="card-body p-4">
-            <h3 className="card-title text-sm">Status</h3>
+            <h3 className="card-title text-sm font-inter">Status</h3>
             <div
-              className={`text-lg font-bold ${
+              className={`text-lg font-bold font-inter ${
                 submission.status === "Accepted" ? "text-success" : "text-error"
               }`}
             >
@@ -44,40 +44,48 @@ const SubmissionResults = ({ submission }) => {
           </div>
         </div>
 
-        <div className="card bg-base-200 shadow-lg">
+        <div className="card bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  shadow-2xl rounded-lg">
           <div className="card-body p-4">
-            <h3 className="card-title text-sm">Success Rate</h3>
-            <div className="text-lg font-bold">{successRate.toFixed(1)}%</div>
+            <h3 className="card-title text-sm font-inter">Success Rate</h3>
+            <div className="text-lg font-bold font-inter">
+              {successRate.toFixed(1)}%
+            </div>
           </div>
         </div>
 
-        <div className="card bg-base-200 shadow-lg">
+        <div className="card bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  shadow-2xl rounded-lg">
           <div className="card-body p-4">
-            <h3 className="card-title text-sm flex items-center gap-2">
+            <h3 className="card-title text-sm flex items-center gap-2 font-inter">
               <Clock className="w-4 h-4" />
               Avg. Runtime
             </h3>
-            <div className="text-lg font-bold">{avgTime.toFixed(3)} s</div>
+            <div className="text-lg font-bold font-inter">
+              {avgTime.toFixed(3)} s
+            </div>
           </div>
         </div>
 
-        <div className="card bg-base-200 shadow-lg">
+        <div className="card bbg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  shadow-2xl rounded-lg">
           <div className="card-body p-4">
-            <h3 className="card-title text-sm flex items-center gap-2">
+            <h3 className="card-title text-sm flex items-center gap-2 font-inter">
               <Memory className="w-4 h-4" />
               Avg. Memory
             </h3>
-            <div className="text-lg font-bold">{avgMemory.toFixed(0)} KB</div>
+            <div className="text-lg font-bold font-inter">
+              {avgMemory.toFixed(0)} KB
+            </div>
           </div>
         </div>
       </div>
 
       {/* Test Cases Results */}
-      <div className="card bg-base-100 shadow-xl">
+      <div className="card bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700  shadow-2xl rounded-lg">
         <div className="card-body">
-          <h2 className="card-title mb-4">Test Cases Results</h2>
+          <h2 className="card-title mb-4 font-playpen text-center">
+            Test Cases Results
+          </h2>
           <div className="overflow-x-auto">
-            <table className="table table-zebra w-full">
+            <table className="table border-b-[1px] w-full font-inter">
               <thead>
                 <tr>
                   <th>Status</th>
@@ -90,7 +98,7 @@ const SubmissionResults = ({ submission }) => {
               <tbody>
                 {submission.testcases.map((testCase) => (
                   <tr key={testCase.id}>
-                    <td>
+                    <td className="border-b-[1px] border-gray-200 dark:border-gray-500">
                       {testCase.passed ? (
                         <div className="flex items-center gap-2 text-success">
                           <CheckCircle2 className="w-5 h-5" />
@@ -103,10 +111,18 @@ const SubmissionResults = ({ submission }) => {
                         </div>
                       )}
                     </td>
-                    <td className="font-mono">{testCase.expected}</td>
-                    <td className="font-mono">{testCase.stdout || "null"}</td>
-                    <td>{testCase.memory}</td>
-                    <td>{testCase.time}</td>
+                    <td className="font-mono border-b-[1px] border-gray-200 dark:border-gray-500">
+                      {testCase.expected}
+                    </td>
+                    <td className="font-mono border-b-[1px] border-gray-200 dark:border-gray-500">
+                      {testCase.stdout || "null"}
+                    </td>
+                    <td className="border-b-[1px] border-gray-200 dark:border-gray-500">
+                      {testCase.memory}
+                    </td>
+                    <td className="border-b-[1px] border-gray-200 dark:border-gray-500">
+                      {testCase.time}
+                    </td>
                   </tr>
                 ))}
               </tbody>

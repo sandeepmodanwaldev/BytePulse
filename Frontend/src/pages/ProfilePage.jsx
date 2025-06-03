@@ -5,11 +5,12 @@ import { useProblemStore } from "../store/useProblemStore.js";
 import { usePlaylistStore } from "../store/usePlaylistStore.js";
 import { Editor } from "@monaco-editor/react";
 import { useNavigate } from "react-router-dom";
-
+import { User } from "lucide-react";
 function ProfilePage() {
   const { profile, fetchProfile, isLoadingProfile, profileError } =
     useAuthStore();
   const [openIndex, setOpenIndex] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const toggleFAQ = (index) => {
@@ -68,7 +69,10 @@ function ProfilePage() {
 
   return (
     <div className="m-4 md:m-10 p-8 dark:border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 dark:text-white shadow-md">
-      {/* Profile Header */}
+      {/* Profile Header */}{" "}
+      <h1 className="text-center text-xl md:text-3xl mb-8 font-bold font-inter">
+        Your Profile Section
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="flex flex-col items-center relative">
           <img
@@ -77,24 +81,32 @@ function ProfilePage() {
             className="w-40 h-40 rounded-full object-cover border-4 border-orange-400"
           />
           {profile.role?.toUpperCase() === "ADMIN" && (
-            <span className="absolute -bottom-3 px-3 py-1 text-sm bg-red-600 text-white rounded-full shadow-md">
+            <span className="absolute -bottom-3 px-3 font-inter py-1 text-sm bg-red-600 text-white rounded-full shadow-md">
               ADMIN
+            </span>
+          )}
+          {profile.role?.toUpperCase() === "USER" && (
+            <span className="absolute -bottom-3 px-3 font-inter py-1 text-sm bg-red-600 text-white rounded-full shadow-md">
+              USER
             </span>
           )}
         </div>
 
         <div className="space-y-4 text-lg md:text-xl font-[Inter]">
           <p>
-            <span className="font-semibold">Username:</span> {profile.username}
+            <span className="font-semibold font-[Inter]">Username:</span>{" "}
+            {profile.username}
           </p>
           <p>
-            <span className="font-semibold">Email:</span> {profile.email}
+            <span className="font-semibold font-[Inter]">Email:</span>{" "}
+            {profile.email}
           </p>
           <p>
-            <span className="font-semibold">Role:</span> {profile.role}
+            <span className="font-semibold font-[Inter]">Role:</span>{" "}
+            {profile.role}
           </p>
           <p>
-            <span className="font-semibold">Email Verified:</span>{" "}
+            <span className="font-semibold font-[Inter]">Verify Email:</span>{" "}
             <span
               className={
                 profile.isEmailVerification ? "text-green-500" : "text-red-500"
@@ -104,23 +116,22 @@ function ProfilePage() {
             </span>
           </p>
           <p>
-            <span className="font-semibold">Total Submissions:</span>{" "}
+            <span className="text-semibold">Total Submissions:</span>{" "}
             {submissionCount ?? submissions.length}
           </p>
         </div>
       </div>
-
       {/* Submission History */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-10 font-inter">
+          <h2 className="text-center text-xl md:text-3xl mb-8 font-bold font-inter">
             Submission History
           </h2>
           <div className="space-y-4">
             {submissions.map((faq, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all dark:bg-gray-800 dark:text-white"
+                className="bg-white rounded-lg font-lexend shadow-md p-4 cursor-pointer transition-all dark:bg-gray-800 dark:text-white"
                 onClick={() => toggleFAQ(index)}
               >
                 <div className="flex justify-between items-center">
@@ -156,15 +167,21 @@ function ProfilePage() {
                     />
                     <div className="mt-4 grid grid-cols-2 gap-4">
                       <div>
-                        <h3 className="text-2xl font-bold mb-2">Stdin</h3>
+                        <h3 className="text-2xl font-bold mb-2 font-inter">
+                          Stdin
+                        </h3>
                         <p>{faq.stdin}</p>
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold mb-2">Stdout</h3>
+                        <h3 className="text-2xl font-bold mb-2 font-inter">
+                          Stdout
+                        </h3>
                         <p>{faq.stdout}</p>
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold mb-2">Memory</h3>
+                        <h3 className="text-2xl font-bold mb-2 font-inter">
+                          Memory
+                        </h3>
                         {JSON.parse(faq.memory).map((mem, idx) => (
                           <p key={idx}>
                             Test {idx + 1}: {mem}
@@ -172,7 +189,9 @@ function ProfilePage() {
                         ))}
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold mb-2">Time</h3>
+                        <h3 className="text-2xl font-bold mb-2 font-inter">
+                          Time
+                        </h3>
                         {JSON.parse(faq.time).map((time, idx) => (
                           <p key={idx}>
                             Test {idx + 1}: {time}
@@ -187,24 +206,30 @@ function ProfilePage() {
           </div>
         </div>
       </section>
-
       {/* Problem Stats */}
       <div className="mt-4 grid grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border dark:border-gray-700 shadow-2xl">
-          <h3 className="font-bold text-2xl mb-2">Total Problem Solve</h3>
-          <p className="text-xl">{solvedProblemsCount?.count || 0}</p>
+          <h3 className="font-bold text-2xl mb-2 font-lexend">
+            Total Problem Solve
+          </h3>
+          <p className="text-xl font-inter">
+            {solvedProblemsCount?.count || 0}
+          </p>
         </div>
         <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border dark:border-gray-700 shadow-2xl">
-          <h3 className="font-bold text-2xl mb-2">Accuracy</h3>
-          <p className="text-xl">{accuracy?.accuracy || 0}%</p>
+          <h3 className="font-bold text-2xl mb-2 font-lexend">Accuracy</h3>
+          <p className="text-xl font-inter">{accuracy?.accuracy || 0}</p>
         </div>
       </div>
-
       {/* Playlist Section */}
       <div className="mt-16">
-        <h2 className="text-3xl font-bold mb-6">Your Playlists</h2>
+        <h2 className="text-center text-xl md:text-3xl mb-8 font-bold font-inter">
+          Your Playlists
+        </h2>
         {playlists.length === 0 ? (
-          <p className="text-gray-400">You don't have any playlists yet.</p>
+          <p className="text-gray-400 font-lexend">
+            You don't have any playlists yet.
+          </p>
         ) : (
           <div className="grid md:grid-cols-2 gap-6">
             {playlists.map((playlist) => (
@@ -212,39 +237,61 @@ function ProfilePage() {
                 key={playlist.id}
                 className="p-5 border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 shadow hover:shadow-lg transition"
               >
-                <h3 className="text-xl font-bold text-orange-500">
+                <h3 className="text-xl font-bold text-orange-400 font-lexend">
                   {playlist.name}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mt-1">
+                <p className="text-gray-600 dark:text-gray-300 mt-1 font-inter">
                   {playlist.description}
                 </p>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-400 mt-1 font-inter">
                   Created: {new Date(playlist.createdAt).toLocaleDateString()}
                 </p>
-                <p className="mt-2 text-sm font-medium text-gray-500">
+                <p className="mt-2 text-sm font-medium text-gray-500 font-inter">
                   Problems: {playlist.problems?.length || 0}
                 </p>
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={() => navigate(`/playlists/${playlist.id}`)}
-                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 font-inter"
                   >
                     View
                   </button>
                   <button
-                    onClick={() => {
-                      if (
-                        confirm(
-                          "Are you sure you want to delete this playlist?"
-                        )
-                      ) {
-                        deletePlaylist(playlist.id);
-                      }
-                    }}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                    onClick={() => setShowModal(true)}
+                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 font-inter"
                   >
                     Delete
                   </button>
+
+                  {showModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+                        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white font-inter">
+                          Confirm Deletion
+                        </h2>
+                        <p className="text-gray-700 dark:text-gray-300 mb-6 font-inter">
+                          Are you sure you want to delete this playlist?
+                        </p>
+                        <div className="flex justify-end gap-4">
+                          <button
+                            onClick={() => setShowModal(false)}
+                            className="px-4 py-2 bg-gray-200 font-inter dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() => {
+                              deletePlaylist(playlist.id);
+                              setShowModal(false);
+                            }}
+                            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-inter"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

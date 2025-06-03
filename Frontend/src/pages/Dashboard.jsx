@@ -35,8 +35,10 @@ const Dashboard = () => {
       <div className="p-6 md:p-10 space-y-10">
         {/* Welcome Banner */}
         <div className="bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200 p-6">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {name}! 👋</h1>
-          <p className="text-base text-gray-500 dark:text-gray-400">
+          <h1 className="text-3xl font-bold mb-2 font-playpen">
+            Welcome back, {name}! 👋
+          </h1>
+          <p className="text-base text-gray-500 dark:text-gray-400 font-lexend">
             Ready to level up your coding skills? Let's tackle some challenges.
           </p>
         </div>
@@ -45,30 +47,36 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="card bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200">
             <div className="card-body">
-              <h2 className="text-sm text-gray-500">Problems Solved</h2>
-              <p className="text-3xl font-bold text-primary">
+              <h2 className="text-sm text-gray-500 font-lexend">
+                Problems Solved
+              </h2>
+              <p className="text-3xl font-bold text-primary font-inter">
                 {solvedProblemsCount?.count || 0}
               </p>
             </div>
           </div>
           <div className="card bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200">
             <div className="card-body">
-              <h2 className="text-sm text-gray-500">Current Streak</h2>
-              <p className="text-3xl font-bold text-success">1 Days</p>
+              <h2 className="text-sm text-gray-500 font-lexend">
+                Current Streak
+              </h2>
+              <p className="text-3xl font-bold text-success font-inter">
+                1 Days
+              </p>
             </div>
           </div>
           <div className="card bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200">
             <div className="card-body">
-              <h2 className="text-sm text-gray-500">Accuracy</h2>
-              <p className="text-3xl font-bold text-warning">
+              <h2 className="text-sm text-gray-500 font-lexend">Accuracy</h2>
+              <p className="text-3xl font-bold text-warning font-inter">
                 {accuracy?.accuracy || 0}
               </p>
             </div>
           </div>
           <div className="card bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200">
             <div className="card-body">
-              <h2 className="text-sm text-gray-500">Playlist</h2>
-              <p className="text-3xl font-bold text-info">
+              <h2 className="text-sm text-gray-500 font-lexend">Playlist</h2>
+              <p className="text-3xl font-bold text-info font-inter">
                 {playlistCount || 0}
               </p>
             </div>

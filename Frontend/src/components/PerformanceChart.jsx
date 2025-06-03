@@ -91,18 +91,18 @@ const PerformanceChart = ({ times = [], memory = [] }) => {
       {/* Header */}
       <div className="flex flex-wrap justify-between gap-4 mb-4">
         <div>
-          <p className="text-sm text-black dark:text-white">
+          <p className="text-sm text-black dark:text-white font-inter">
             🕒 <strong>Runtime</strong>
           </p>
-          <p className="text-xl font-bold text-black dark:text-white ">
+          <p className="text-xl font-bold text-black dark:text-white font-inter ">
             {totalTimeInSec} ms
           </p>
         </div>
         <div>
-          <p className="text-sm text-black dark:text-white">
+          <p className="text-sm text-black dark:text-white font-inter">
             💾 <strong>Memory</strong>
           </p>
-          <p className="text-xl font-bold text-black dark:text-white">
+          <p className="text-xl font-bold text-black dark:text-white font-inter">
             {totalMemoryInMB} MB
           </p>
         </div>

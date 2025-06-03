@@ -568,31 +568,12 @@ const CreateProblemForm = () => {
         <div className="card-body p-6 md:p-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 pb-4 border-b">
             <h2 className="card-title text-2xl md:text-3xl flex items-center gap-3">
-              <FileText className="w-6 h-6 md:w-8 md:h-8 dark:text-primary " />
+              <FileText className="w-6 h-6 md:w-8 md:h-8 dark:text-primary font-inter " />
               Create Problem
             </h2>
 
-            <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-0">
-              <div className="join">
-                <button
-                  type="button"
-                  className={`btn join-item ${
-                    sampleType === "DP" ? "btn-active" : ""
-                  }`}
-                  onClick={() => setSampleType("array")}
-                >
-                  DP Problem
-                </button>
-                <button
-                  type="button"
-                  className={`btn join-item ${
-                    sampleType === "string" ? "btn-active" : ""
-                  }`}
-                  onClick={() => setSampleType("string")}
-                >
-                  String Problem
-                </button>
-              </div>
+            <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-0 font-inter">
+              <div className="join"></div>
               <button
                 type="button"
                 className="btn btn-secondary gap-2"
@@ -609,19 +590,19 @@ const CreateProblemForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-control md:col-span-2">
                 <label className="label">
-                  <span className="label-text text-gray-900 dark:text-white md:text-lg font-semibold">
+                  <span className="label-text text-gray-900 dark:text-white md:text-lg font-semibold font-inter">
                     Title
                   </span>
                 </label>
                 <input
                   type="text"
-                  className="input input-bordered w-full border-gray-300  shadow-2xl dark:border-gray-300  dark:bg-[#262d43] dark:text-white  text-black bg-white md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                  className="input font-inter input-bordered w-full border-gray-300  shadow-2xl dark:border-gray-300  dark:bg-[#262d43] dark:text-white  text-black bg-white md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400"
                   {...register("title")}
                   placeholder="Enter problem title"
                 />
                 {errors.title && (
                   <label className="label">
-                    <span className="label-text-alt text-error">
+                    <span className="label-text-alt text-error font-inter">
                       {errors.title.message}
                     </span>
                   </label>
@@ -630,19 +611,18 @@ const CreateProblemForm = () => {
 
               <div className="form-control md:col-span-2">
                 <label className="label">
-                  <span className="label-text dark:text-white text-gray-900 md:text-lg font-semibold">
+                  <span className="label-text font-inter dark:text-white text-gray-900 md:text-lg font-semibold">
                     Description
                   </span>
                 </label>
                 <textarea
-                  className="input input-bordered w-full border-gray-300  shadow-2xl dark:border-gray-300  dark:bg-[#262d43] dark:text-white  text-black bg-white md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 textarea textarea-bordered min-h-32 text-base  p-4 resize-y"
-                  // className="textarea textarea-bordered min-h-32 w-full text-base md:text-lg p-4 resize-y"
+                  className="input input-bordered w-full font-inter border-gray-300  shadow-2xl dark:border-gray-300  dark:bg-[#262d43] dark:text-white  text-black bg-white md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 textarea textarea-bordered min-h-32 text-base  p-4 resize-y"
                   {...register("description")}
                   placeholder="Enter problem description"
                 />
                 {errors.description && (
                   <label className="label">
-                    <span className="label-text-alt text-error">
+                    <span className="label-text-alt text-error font-inter">
                       {errors.description.message}
                     </span>
                   </label>
@@ -651,12 +631,12 @@ const CreateProblemForm = () => {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text text-base md:text-lg font-semibold dark:text-white">
+                  <span className="label-text font-inter text-base md:text-lg font-semibold dark:text-white">
                     Difficulty
                   </span>
                 </label>
                 <select
-                  className="select select-bordered w-full text-base md:text-lg bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                  className="select select-bordered font-inter w-full text-base md:text-lg bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                   {...register("difficulty")}
                 >
                   <option value="EASY">Easy</option>
@@ -665,7 +645,7 @@ const CreateProblemForm = () => {
                 </select>
                 {errors.difficulty && (
                   <label className="label">
-                    <span className="label-text-alt text-error">
+                    <span className="label-text-alt text-error font-inter">
                       {errors.difficulty.message}
                     </span>
                   </label>
@@ -676,19 +656,19 @@ const CreateProblemForm = () => {
             {/* Tags */}
             <div className="card  bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 p-4 md:p-6 ">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2">
+                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2 font-inter">
                   <BookOpen className="w-5 h-5" />
                   Tags
                 </h3>
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-primary btn-sm font-inter"
                   onClick={() => appendTag("")}
                 >
                   <Plus className="w-4 h-4 mr-1" /> Add Tag
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-inter">
                 {tagFields.map((field, index) => (
                   <div key={field.id} className="flex gap-2 items-center">
                     <input
@@ -699,18 +679,18 @@ const CreateProblemForm = () => {
                     />
                     <button
                       type="button"
-                      className="btn btn-ghost btn-square btn-sm"
+                      className="btn btn-ghost btn-square btn-sm font-inter"
                       onClick={() => removeTag(index)}
                       disabled={tagFields.length === 1}
                     >
-                      <Trash2 className="w-4 h-4 text-error" />
+                      <Trash2 className="w-4 h-4 text-error font-inter" />
                     </button>
                   </div>
                 ))}
               </div>
               {errors.tags && (
                 <div className="mt-2">
-                  <span className="text-error text-sm">
+                  <span className="text-error text-sm font-inter">
                     {errors.tags.message}
                   </span>
                 </div>
@@ -720,13 +700,13 @@ const CreateProblemForm = () => {
             {/* Test Cases */}
             <div className="card bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 p-4 md:p-6 ">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2">
+                <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2 font-inter">
                   <CheckCircle2 className="w-5 h-5" />
                   Test Cases
                 </h3>
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-primary btn-sm font-inter"
                   onClick={() => appendTestCase({ input: "", output: "" })}
                 >
                   <Plus className="w-4 h-4 mr-1" /> Add Test Case
@@ -736,7 +716,7 @@ const CreateProblemForm = () => {
                 {testCaseFields.map((field, index) => (
                   <div
                     key={field.id}
-                    className="card bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                    className="card font-inter bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                   >
                     <div className="card-body p-4 md:p-6">
                       <div className="flex justify-between items-center mb-4">
@@ -745,7 +725,7 @@ const CreateProblemForm = () => {
                         </h4>
                         <button
                           type="button"
-                          className="btn btn-ghost btn-sm text-error"
+                          className="btn btn-ghost btn-sm text-error font-inter"
                           onClick={() => removeTestCase(index)}
                           disabled={testCaseFields.length === 1}
                         >
@@ -755,18 +735,18 @@ const CreateProblemForm = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <div className="form-control">
                           <label className="label">
-                            <span className="label-text font-medium text-gray-900 dark:text-white">
+                            <span className="label-text font-medium font-inter text-gray-900 dark:text-white">
                               Input
                             </span>
                           </label>
                           <textarea
-                            className="textarea textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 dark:not-only-of-type:text-gray-400"
+                            className="textarea textarea-bordered font-inter min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 dark:not-only-of-type:text-gray-400"
                             {...register(`testcases.${index}.input`)}
                             placeholder="Enter test case input"
                           />
                           {errors.testcases?.[index]?.input && (
                             <label className="label">
-                              <span className="label-text-alt text-error">
+                              <span className="label-text-alt text-error font-inter">
                                 {errors.testcases[index].input.message}
                               </span>
                             </label>
@@ -774,18 +754,18 @@ const CreateProblemForm = () => {
                         </div>
                         <div className="form-control">
                           <label className="label">
-                            <span className="label-text font-medium text-gray-900 dark:text-white">
+                            <span className="label-text font-inter font-medium text-gray-900 dark:text-white">
                               Expected Output
                             </span>
                           </label>
                           <textarea
-                            className="textarea textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                            className="textarea font-inter textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                             {...register(`testcases.${index}.output`)}
                             placeholder="Enter expected output"
                           />
                           {errors.testcases?.[index]?.output && (
                             <label className="label">
-                              <span className="label-text-alt text-error">
+                              <span className="label-text-alt text-error font-inter">
                                 {errors.testcases[index].output.message}
                               </span>
                             </label>
@@ -798,7 +778,7 @@ const CreateProblemForm = () => {
               </div>
               {errors.testcases && !Array.isArray(errors.testcases) && (
                 <div className="mt-2">
-                  <span className="text-error text-sm">
+                  <span className="text-error text-sm font-inter">
                     {errors.testcases.message}
                   </span>
                 </div>
@@ -806,22 +786,22 @@ const CreateProblemForm = () => {
             </div>
 
             {/* Code Editor Sections */}
-            <div className="space-y-8">
+            <div className="space-y-8 font-inter">
               {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
                 <div
                   key={language}
-                  className="card bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 p-4 md:p-6 "
+                  className="card bg-white dark:bg-[#262d43] font-inter broder border-gray-300  shadow-2xl dark:border-gray-300 p-4 md:p-6 "
                 >
                   <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2">
                     <Code2 className="w-5 h-5" />
                     {language}
                   </h3>
 
-                  <div className="space-y-6">
+                  <div className="space-y-6 font-inter">
                     {/* Starter Code */}
-                    <div className="card  bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 ">
+                    <div className="card font-inter bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 ">
                       <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4 ">
+                        <h4 className="font-semibold text-base md:text-lg mb-4 font-inter">
                           Starter Code Template
                         </h4>
                         <div className="border rounded-md overflow-hidden">
@@ -849,7 +829,7 @@ const CreateProblemForm = () => {
                         </div>
                         {errors.codeSnippets?.[language] && (
                           <div className="mt-2">
-                            <span className="text-error text-sm">
+                            <span className="text-error text-sm font-inter">
                               {errors.codeSnippets[language].message}
                             </span>
                           </div>
@@ -860,7 +840,7 @@ const CreateProblemForm = () => {
                     {/* Reference Solution */}
                     <div className="card bg-base-10 bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 ">
                       <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4 flex items-center gap-2">
+                        <h4 className="font-semibold text-base md:text-lg mb-4 flex items-center gap-2 font-inter">
                           <CheckCircle2 className="w-5 h-5 text-success" />
                           Reference Solution
                         </h4>
@@ -889,7 +869,7 @@ const CreateProblemForm = () => {
                         </div>
                         {errors.referenceSolution?.[language] && (
                           <div className="mt-2">
-                            <span className="text-error text-sm">
+                            <span className="text-error text-sm font-inter">
                               {errors.referenceSolution[language].message}
                             </span>
                           </div>
@@ -900,43 +880,43 @@ const CreateProblemForm = () => {
                     {/* Examples */}
                     <div className="card bg-base-10 bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 ">
                       <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4">
+                        <h4 className="font-semibold text-base md:text-lg mb-4 font-inter">
                           Example
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                           <div className="form-control">
                             <label className="label">
-                              <span className="label-text font-medium text-black dark:text-white">
+                              <span className="label-text font-inter font-medium text-black dark:text-white">
                                 Input
                               </span>
                             </label>
                             <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                              className="textarea font-inter textarea-bordered min-h-20 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                               {...register(`examples.${language}.input`)}
                               placeholder="Example input"
                             />
                             {errors.examples?.[language]?.input && (
                               <label className="label">
-                                <span className="label-text-alt text-error">
+                                <span className="label-text-alt text-error font-inter">
                                   {errors.examples[language].input.message}
                                 </span>
                               </label>
                             )}
                           </div>
-                          <div className="form-control">
+                          <div className="form-control font-inter">
                             <label className="label">
-                              <span className="label-text font-medium text-black dark:text-white">
+                              <span className="label-text font-inter font-medium text-black dark:text-white">
                                 Output
                               </span>
                             </label>
                             <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                              className="textarea font-inter textarea-bordered min-h-20 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                               {...register(`examples.${language}.output`)}
                               placeholder="Example output"
                             />
                             {errors.examples?.[language]?.output && (
                               <label className="label">
-                                <span className="label-text-alt text-error">
+                                <span className="label-text-alt text-error font-inter">
                                   {errors.examples[language].output.message}
                                 </span>
                               </label>
@@ -944,12 +924,12 @@ const CreateProblemForm = () => {
                           </div>
                           <div className="form-control md:col-span-2 ">
                             <label className="label">
-                              <span className="label-text font-medium text-black dark:text-white">
+                              <span className="label-text font-medium text-black dark:text-white font-inter">
                                 Explanation
                               </span>
                             </label>
                             <textarea
-                              className="textarea textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                              className="textarea font-inter textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                               {...register(`examples.${language}.explanation`)}
                               placeholder="Explain the example"
                             />
@@ -964,23 +944,24 @@ const CreateProblemForm = () => {
 
             {/* Additional Information */}
             <div className="card bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300 p-4 md:p-6 ">
-              <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2">
-                <Lightbulb className="w-5 h-5 text-warning" />
+              <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2 font-inter">
                 Additional Information
               </h3>
               <div className="space-y-6">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-medium">Constraints</span>
+                    <span className="label-text font-medium font-inter">
+                      Constraints
+                    </span>
                   </label>
                   <textarea
-                    className="textarea textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                    className="textarea textarea-bordered font-inter min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                     {...register("constraints")}
                     placeholder="Enter problem constraints"
                   />
                   {errors.constraints && (
                     <label className="label">
-                      <span className="label-text-alt text-error">
+                      <span className="label-text-alt font-inter text-error">
                         {errors.constraints.message}
                       </span>
                     </label>
@@ -988,35 +969,38 @@ const CreateProblemForm = () => {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-medium">
+                    <span className="label-text font-medium font-inter">
                       Hints (Optional)
                     </span>
                   </label>
                   <textarea
-                    className="textarea textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                    className="textarea font-inter textarea-bordered min-h-24 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                     {...register("hints")}
                     placeholder="Enter hints for solving the problem"
                   />
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-medium">
+                    <span className="label-text font-medium font-inter">
                       Editorial (Optional)
                     </span>
                   </label>
                   <textarea
-                    className="textarea textarea-bordered min-h-32 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
+                    className="textarea textarea-bordered font-inter min-h-32 w-full p-3 resize-y bg-white dark:bg-[#262d43] broder border-gray-300  shadow-2xl dark:border-gray-300"
                     {...register("editorial")}
-                    placeholder="Enter problem editorial/solution explanation"
+                    placeholder="Enter problem editorial/solution explanation "
                   />
                 </div>
               </div>
             </div>
 
-            <div className="card-actions justify-end pt-4 border-t">
-              <button type="submit" className="btn btn-primary btn-lg gap-2">
+            <div className="card-actions justify-end pt-4 border-t font-inter">
+              <button
+                type="submit"
+                className="btn btn-primary btn-lg gap-2 font-inter"
+              >
                 {isLoading ? (
-                  <span className="loading loading-spinner text-white"></span>
+                  <span className="loading loading-spinner text-white font-inter"></span>
                 ) : (
                   <>
                     <CheckCircle2 className="w-5 h-5" />

@@ -64,14 +64,16 @@ const ProblemsTable = ({ problems }) => {
     <div className="w-full max-w-[99%] mx-auto mt-6 sm:mt-8 md:mt-10 lg:mt-12 px-2 sm:px-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Problems</h1>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold font-inter">
+          Problems
+        </h1>
         <button
           onClick={() => setIsCreateModalOpen(true)}
           className="btn btn-primary gap-1 sm:gap-2 btn-sm sm:btn-md text-xs sm:text-sm md:text-base w-full sm:w-auto"
         >
           <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="hidden xs:inline">Create Playlist</span>
-          <span className="xs:hidden">Create</span>
+          <span className="hidden xs:inline font-lexend ">Create Playlist</span>
+          <span className="xs:hidden font-inter">Create</span>
         </button>
       </div>
 
@@ -80,18 +82,20 @@ const ProblemsTable = ({ problems }) => {
         <input
           type="text"
           placeholder="Search by title"
-          className="input input-bordered w-full border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-sm sm:text-base md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 h-10 sm:h-12"
+          className="input font-inter input-bordered w-full border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-sm sm:text-base md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 h-10 sm:h-12"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <select
-          className="select select-bordered w-full border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-sm sm:text-base md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 h-10 sm:h-12"
+          className="select font-inter select-bordered w-full border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-sm sm:text-base md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 h-10 sm:h-12"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
         >
           <option value="ALL">
-            <span className="hidden sm:inline">All Difficulties</span>
-            <span className="sm:hidden">All Diff</span>
+            <span className="hidden sm:inline font-inter">
+              All Difficulties
+            </span>
+            <span className="sm:hidden font-inter">All Diff</span>
           </option>
           {difficulties.map((diff) => (
             <option key={diff} value={diff}>
@@ -100,7 +104,7 @@ const ProblemsTable = ({ problems }) => {
           ))}
         </select>
         <select
-          className="select select-bordered w-full border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-sm sm:text-base md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 h-10 sm:h-12 sm:col-span-2 lg:col-span-1"
+          className="select select-bordered w-full font-inter border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-sm sm:text-base md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 h-10 sm:h-12 sm:col-span-2 lg:col-span-1"
           value={selectedTag}
           onChange={(e) => setSelectedTag(e.target.value)}
         >
@@ -119,19 +123,23 @@ const ProblemsTable = ({ problems }) => {
           <thead className="border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-xs sm:text-sm md:text-base lg:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400">
             <tr>
               <th className="w-16 sm:w-20">
-                <span className="hidden sm:inline">Solved</span>
+                <span className="hidden sm:inline font-lexend">Solved</span>
                 <span className="sm:hidden">✓</span>
               </th>
-              <th className="min-w-[120px] sm:min-w-[150px]">Title</th>
-              <th className="hidden md:table-cell min-w-[100px]">Tags</th>
+              <th className="min-w-[120px] sm:min-w-[150px] font-lexend">
+                Title
+              </th>
+              <th className="hidden md:table-cell min-w-[100px] font-lexend">
+                Tags
+              </th>
               <th className="min-w-[80px] sm:min-w-[100px]">
-                <span className="hidden sm:inline">Difficulty</span>
-                <span className="sm:hidden">Diff</span>
+                <span className="hidden sm:inline font-lexend">Difficulty</span>
+                <span className="sm:hidden font-lexend">Diff</span>
               </th>
               <th className="min-w-[100px] sm:min-w-[120px]">Actions</th>
             </tr>
           </thead>
-          <tbody className="border-gray-300 shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-xs sm:text-sm md:text-base lg:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400">
+          <tbody className="border-gray-300 font-lexend shadow-2xl dark:border-gray-300 dark:bg-[#262d43] dark:text-white text-black bg-white text-xs sm:text-sm md:text-base lg:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400">
             {paginatedProblems.length > 0 ? (
               paginatedProblems.map((problem) => {
                 const isSolved = problem.solvedBy.some(
@@ -140,9 +148,9 @@ const ProblemsTable = ({ problems }) => {
                 return (
                   <tr
                     key={problem.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700 font-lexend"
                   >
-                    <td className="text-center">
+                    <td className="text-center font-lexend">
                       <input
                         type="checkbox"
                         className="checkbox checkbox-success checkbox-xs sm:checkbox-sm"
@@ -159,7 +167,7 @@ const ProblemsTable = ({ problems }) => {
                         {problem.title}
                       </Link>
                     </td>
-                    <td className="hidden md:table-cell">
+                    <td className="hidden md:table-cell font-lexend">
                       <div className="flex flex-wrap gap-1">
                         {(problem.tags || []).slice(0, 3).map((tag, idx) => (
                           <span
@@ -178,7 +186,7 @@ const ProblemsTable = ({ problems }) => {
                     </td>
                     <td>
                       <span
-                        className={`badge text-white text-xs font-bold ${
+                        className={`badge text-white text-xs font-bold font-inter ${
                           problem.difficulty === "EASY"
                             ? "badge-success"
                             : problem.difficulty === "MEDIUM"
@@ -199,7 +207,7 @@ const ProblemsTable = ({ problems }) => {
                       </span>
                     </td>
                     <td>
-                      <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
+                      <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 font-lexend">
                         {authUser?.role === "ADMIN" && (
                           <>
                             <button

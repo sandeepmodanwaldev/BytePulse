@@ -45,16 +45,16 @@ function PlaylistDetailsPage() {
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-gray-900 dark:text-white rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold mb-4">{currentPlaylist.name}</h2>
       <p className="mb-2 text-lg">{currentPlaylist.description}</p>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 font-inter">
         Created at: {new Date(currentPlaylist.createdAt).toLocaleDateString()}
       </p>
 
-      <h3 className="text-2xl font-semibold mb-4">
+      <h3 className="text-2xl font-semibold mb-4 font-inter">
         Problems ({currentPlaylist.problems.length})
       </h3>
 
       {currentPlaylist.problems.length === 0 ? (
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-gray-600 dark:text-gray-400 font-inter">
           No problems in this playlist.
         </p>
       ) : (
