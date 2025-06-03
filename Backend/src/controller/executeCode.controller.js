@@ -166,82 +166,80 @@ export const runCode = async (req, res) => {
   const { source_code, language_id, stdin, expected_outputs } = req.body;
 
   try {
-    // Validate input
+    // Validate test cases
     if (
       !Array.isArray(stdin) ||
       stdin.length === 0 ||
       !Array.isArray(expected_outputs) ||
       expected_outputs.length !== stdin.length
     ) {
-      return res
-        .status(400)
-        .json(new ApiError(400, "Invalid or Missing test cases"));
+      return res.status(400).json({ error: "Invalid or missing test cases" });
     }
 
-    // Prepare submissions
+    // Prepare submissions for batch execution
     const submissions = stdin.map((input) => ({
       source_code,
       language_id,
       stdin: input,
     }));
 
-    // Submit and poll results
+    // Submit batch to judge0
     const submitResponse = await submitBatch(submissions);
     const tokens = submitResponse.map((s) => s.token);
     const results = await pollBatchResults(tokens);
 
-    // Analyze result
     let allPassed = true;
     const detailResults = results.map((result, i) => {
-      const stdout = result.stdout?.trim();
-      const expected_output = expected_outputs[i]?.trim();
+      const stdout = result.stdout?.trim() || "";
+      const expected_output = expected_outputs[i]?.trim() || "";
       const passed = stdout === expected_output;
       if (!passed) allPassed = false;
 
       return {
+        id: Math.floor(100000000000000 + Math.random() * 900000000000000),
         testCase: i + 1,
         passed,
         stdout,
         expected: expected_output,
         stderr: result.stderr || null,
-        compile_output: result.compile_output || null,
+        compileOutput: result.compile_output || null,
         status: result.status.description,
-        memory: result.memory ? `${result.memory} KB` : undefined,
-        time: result.time ? `${result.time} s` : undefined,
+        memory: result.memory ? `${result.memory} KB` : null,
+        time: result.time ? `${result.time} s` : null,
       };
     });
 
     const language = await getJudge0LanguageNameById(language_id);
 
-    const testCaseResults = detailResults.map((result) => ({
-      submissionId: null,
-      testCase: result.testCase,
-      passed: result.passed,
-      stdout: result.stdout,
-      expected: result.expected,
-      stderr: result.stderr,
-      compileOutput: result.compile_output,
-      status: result.status,
-      memory: result.memory,
-      time: result.time,
-    }));
+    const response = {
+      id: "temp-run-id",
+      language,
+      sourceCode: source_code,
+      stdin: JSON.stringify(stdin),
+      stdout: JSON.stringify(detailResults.map((r) => r.stdout)),
+      stderr: detailResults.some((r) => r.stderr)
+        ? JSON.stringify(detailResults.map((r) => r.stderr))
+        : null,
+      compileOutput: detailResults.some((r) => r.compileOutput)
+        ? JSON.stringify(detailResults.map((r) => r.compileOutput))
+        : null,
+      status: allPassed ? "Accepted" : "Wrong Answer",
+      memory: JSON.stringify(detailResults.map((r) => r.memory)),
+      time: JSON.stringify(detailResults.map((r) => r.time)),
+      testcases: detailResults,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    return res.status(200).json(
-      new ApiResponse(
-        200,
-        {
-          language,
-          allPassed,
-          detailResults,
-          testcases: testCaseResults,
-        },
-        "Code Executed Successfully (Not Saved)"
-      )
-    );
+    res.status(200).json({
+      status: 200,
+      data: response,
+      message: "Code executed successfully",
+    });
   } catch (error) {
-    console.log(error);
-    return res
+    console.error("runCode error:", error);
+    res
       .status(500)
-      .json(new ApiError(500, "Error Executing Code", error.message));
+      .json({ error: "Error executing code", details: error.message });
   }
 };

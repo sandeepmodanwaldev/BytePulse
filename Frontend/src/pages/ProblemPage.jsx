@@ -18,8 +18,9 @@ import {
   ArrowLeft,
   Loader2,
   Loader,
+  ChevronLeft,
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useProblemStore } from "../store/useProblemStore";
 import { getLanguageId } from "../libs/lang";
 import { useExecutionStore } from "../store/useExecutionStore";
@@ -28,7 +29,7 @@ import Submission from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
 import useThemeStore from "../store/useThemeStore";
 import PerformanceChart from "../components/PerformanceChart";
-import { set } from "react-hook-form";
+import { toast } from "sonner";
 
 const ProblemPage = () => {
   const { id } = useParams();
@@ -40,22 +41,38 @@ const ProblemPage = () => {
     getSubmissionForProblem,
     getSubmissionCountForProblem,
     submissionCount,
+    allsubmission,
   } = useSubmissionStore();
 
   const [code, setCode] = useState("");
-  // const [codeSolution, setCodeSolution] = useState("");
   const [activeTab, setActiveTab] = useState("description");
   const [selectedLanguage, setSelectedLanguage] = useState("JAVASCRIPT");
-  const [isBookmarked, setIsBookmarked] = useState(false);
+
   const [testcases, setTestCases] = useState([]);
   const [time, setTime] = useState([]);
   const [memory, setMemory] = useState([]);
-  const [isProblemSolved, setIsProblemSolved] = useState(false);
 
   const { executeCode, submission, isExecuting, isRunning, runCodeOnly } =
     useExecutionStore();
+
   const { theme } = useThemeStore();
   const [vsTheme, setVsTheme] = useState("vs-light"); // default
+
+  const passedTests = submission?.testcases.filter((tc) => tc.passed).length;
+
+  const totalTests = submission?.testcases.length;
+  const successRate = (passedTests / totalTests) * 100;
+
+  const location = useLocation();
+  const handleShare = async () => {
+    try {
+      const url = window.location.origin + location.pathname;
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    } catch (err) {
+      toast.error("Failed to copy link.");
+    }
+  };
 
   useEffect(() => {
     if (theme === "dark") {
@@ -68,14 +85,32 @@ const ProblemPage = () => {
   useEffect(() => {
     getProblemById(id);
     getSubmissionCountForProblem(id);
+    getSubmissionForProblem(id);
   }, [id]);
 
   useEffect(() => {
+    const hasAccepted = allsubmission.some((sub) => sub.status === "Accepted");
+    const seen = new Set();
+    let firstAcceptedSource = null;
+
+    if (hasAccepted) {
+      for (const sub of allsubmission) {
+        const code = sub.sourceCode.trim();
+        if (!seen.has(code) && sub.language === selectedLanguage) {
+          firstAcceptedSource = code;
+          break;
+        }
+        seen.add(code);
+      }
+    }
+
     if (problem) {
       setCode(
-        problem.codeSnippets?.[selectedLanguage] || submission?.sourceCode || ""
+        hasAccepted && firstAcceptedSource
+          ? firstAcceptedSource
+          : problem.codeSnippets?.[selectedLanguage] || ""
       );
-      // setCodeSolution(problem.referenceSolution?.[selectedLanguage] || "");
+
       setTestCases(
         problem.testcases?.map((tc) => ({
           input: tc.input,
@@ -85,13 +120,9 @@ const ProblemPage = () => {
       if (submission?.testcases) {
         setTime(JSON.parse(submission?.time || []));
         setMemory(JSON.parse(submission?.memory || []));
-        setIsProblemSolved(
-          submission?.testcases?.every((tc) => tc.passed === true)
-        );
       }
     }
-  }, [problem, selectedLanguage, submission]);
-  // console.log("code", code + "   " + codeSolution);
+  }, [problem, selectedLanguage, submission, allsubmission]);
 
   useEffect(() => {
     if (activeTab === "submissions" && id) {
@@ -127,12 +158,15 @@ const ProblemPage = () => {
       console.log("Error executing code", error);
     }
   };
+  const isProblemSolved = submission?.testcases?.every(
+    (tc) => tc.passed === true
+  );
 
   if (isProblemLoading || !problem) {
     return (
       <div className="flex items-center justify-center h-screen bg-base-200">
-        <div className="card bg-base-100 p-8 shadow-xl">
-          <span className="loading loading-spinner loading-lg text-primary"></span>
+        <div className="card bg-base-100 p-8 shadow-xl items-center">
+          <span className="loading loading-spinner loading-lg  text-primary"></span>
           <p className="mt-4 text-base-content/70">Loading problem...</p>
         </div>
       </div>
@@ -144,6 +178,9 @@ const ProblemPage = () => {
       case "description":
         return (
           <div className="prose max-w-none ">
+            <h1 className="md:text-4xl texl-xl mb-4 font-bold">
+              {problem.title}
+            </h1>
             <p className="text-lg  mb-6">{problem.description}</p>
 
             {problem.examples && (
@@ -202,7 +239,7 @@ const ProblemPage = () => {
       case "submissions":
         return (
           <SubmissionsList
-            submissions={submissions}
+            submissions={allsubmission}
             isLoading={isSubmissionsLoading}
           />
         );
@@ -241,9 +278,9 @@ const ProblemPage = () => {
             to={"/dashboard"}
             className="flex items-center gap-2 text-primary"
           >
-            <Home className="w-10 h-10" />
+            <ChevronLeft className="w-4 h-4" />
+            Back
             {/* <Home /> */}
-            <ChevronRight className="w-4 h-4" />
           </Link>
           <div className="mt-2">
             <div className="flex items-center gap-2 text-sm sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl sm:mt-4 md:mt-6 dark:text-gray-400 text-gray-900">
@@ -261,24 +298,16 @@ const ProblemPage = () => {
               <span>{submissionCount} Submissions</span>
               <span className="text-base-content/30">•</span>
               <ThumbsUp className="w-4 h-4" />
-              <span>95% Success Rate</span>
+              <span>{successRate || 0}% Success Rate</span>
             </div>
           </div>
         </div>
         <div className="flex flex-row">
-          <button
-            className={`btn btn-ghost btn-circle ${
-              isBookmarked ? "text-primary" : ""
-            }`}
-            onClick={() => setIsBookmarked(!isBookmarked)}
-          >
-            <Bookmark className="w-8 h-8 text-teal-800" />
-          </button>
-          <button className="btn btn-ghost btn-circle">
-            <Share2 className="w-8 h-8 text-secondary" />
+          <button onClick={handleShare} className="btn btn-ghost btn-circle">
+            <Share2 className="w-8 h-8 text-blue-500 " />
           </button>
           <select
-            className="selec text-gray-900  dark:text-white dark:bg-gray-900 w-40"
+            className="selec text-gray-900  dark:text-white dark:bg-gray-800 w-40 rounded-lg border border-gray-200 dark:border-gray-700 "
             value={selectedLanguage}
             onChange={handleLanguageChange}
           >
@@ -295,10 +324,10 @@ const ProblemPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="card bg-white dark:bg-gray-900 shadow-2xl  rounded-xl border border-gray-200 dark:border-gray-700 ">
             <div className="card-body p-0">
-              <div className="tabs tabs-bordered ">
+              <div className="border-b border-gray-300 dark:border-gray-700 flex space-x-4">
                 <button
-                  className={`tab gap-2 text-black dark:text-white hover:text-primary ${
-                    activeTab === "description" ? "tab-active" : ""
+                  className={`py-2 px-4 flex items-center gap-2  transition-colors duration-200 hover:text-primary ${
+                    activeTab === "description" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("description")}
                 >
@@ -306,8 +335,8 @@ const ProblemPage = () => {
                   Description
                 </button>
                 <button
-                  className={`tab gap-2 text-black dark:text-white ${
-                    activeTab === "submissions" ? "tab-active" : ""
+                  className={`py-2 px-4 flex items-center gap-2  transition-colors duration-200 hover:text-primary ${
+                    activeTab === "submissions" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("submissions")}
                 >
@@ -315,8 +344,8 @@ const ProblemPage = () => {
                   Submissions
                 </button>
                 <button
-                  className={`tab gap-2 text-black dark:text-white ${
-                    activeTab === "discussion" ? "tab-active" : ""
+                  className={`py-2 px-4 flex items-center gap-2  transition-colors duration-200 hover:text-primary ${
+                    activeTab === "discussion" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("discussion")}
                 >
@@ -324,8 +353,8 @@ const ProblemPage = () => {
                   Discussion
                 </button>
                 <button
-                  className={`tab gap-2 text-black dark:text-white ${
-                    activeTab === "hints" ? "tab-active" : ""
+                  className={`py-2 px-4 flex items-center gap-2 transition-colors duration-200 hover:text-primary ${
+                    activeTab === "hints" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("hints")}
                 >
@@ -335,9 +364,6 @@ const ProblemPage = () => {
               </div>
 
               <div className="p-6">
-                <h1 className="md:text-4xl texl-xl mb-4 font-bold">
-                  {problem.title}
-                </h1>
                 {isProblemSolved === true ? (
                   <PerformanceChart times={time} memory={memory} />
                 ) : (

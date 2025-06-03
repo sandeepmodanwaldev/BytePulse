@@ -7,6 +7,7 @@ export const useSubmissionStore = create((set, get) => ({
   submissions: [],
   submission: null,
   submissionCount: null,
+  allsubmission: [],
 
   getAllSubmissions: async () => {
     try {
@@ -30,7 +31,7 @@ export const useSubmissionStore = create((set, get) => ({
         `/submission/get-submission/${problemId}`
       );
 
-      set({ submission: res.data.data });
+      set({ allsubmission: res.data.data });
     } catch (error) {
       console.log("Error getting submissions for problem", error);
 

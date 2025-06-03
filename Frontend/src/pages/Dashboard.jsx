@@ -3,8 +3,9 @@ import ProblemTable from "../components/ProblemTable";
 import { useProblemStore } from "../store/useProblemStore";
 import { Loader } from "lucide-react";
 import { usePlaylistStore } from "../store/usePlaylistStore";
-const Dashboard = ({ user }) => {
-  const name = user?.name || "Coder";
+import { useAuthStore } from "../store/useAuthStore";
+const Dashboard = () => {
+  const name = useAuthStore.getState().authUser?.name || "Coder";
 
   const { getAllProblems, problems, isProblemsLoading } = useProblemStore();
   const {
