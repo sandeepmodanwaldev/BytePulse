@@ -142,9 +142,9 @@ function ProfilePage() {
                 {openIndex === index && (
                   <>
                     <Editor
-                      height={faq.stdout.length || "300"}
+                      height={faq.sourceCode.length || "300"}
                       theme="vs-dark"
-                      value={faq.stdout}
+                      value={faq.sourceCode}
                       options={{
                         minimap: { enabled: false },
                         fontSize: 14,
