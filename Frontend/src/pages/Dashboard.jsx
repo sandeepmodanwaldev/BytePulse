@@ -54,7 +54,7 @@ const Dashboard = () => {
           <div className="card bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200">
             <div className="card-body">
               <h2 className="text-sm text-gray-500">Current Streak</h2>
-              <p className="text-3xl font-bold text-success">7 Days</p>
+              <p className="text-3xl font-bold text-success">1 Days</p>
             </div>
           </div>
           <div className="card bg-white shadow-2xl  dark:bg-gray-900 rounded-lg broder brodar-gray-200">

@@ -165,9 +165,11 @@ const ProblemPage = () => {
   if (isProblemLoading || !problem) {
     return (
       <div className="flex items-center justify-center h-screen bg-base-200">
-        <div className="card bg-base-100 p-8 shadow-xl items-center">
-          <span className="loading loading-spinner loading-lg  text-primary"></span>
-          <p className="mt-4 text-base-content/70">Loading problem...</p>
+        <div className="card bg-base-100 p-4 sm:p-6 md:p-8 shadow-xl items-center">
+          <span className="loading loading-spinner loading-sm sm:loading-md md:loading-lg text-primary"></span>
+          <p className="mt-2 sm:mt-4 text-sm sm:text-base text-base-content/70">
+            Loading problem...
+          </p>
         </div>
       </div>
     );
@@ -177,65 +179,80 @@ const ProblemPage = () => {
     switch (activeTab) {
       case "description":
         return (
-          <div className="prose max-w-none ">
-            <h1 className="md:text-4xl texl-xl mb-4 font-bold">
+          <div className="prose max-w-none">
+            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mb-2 sm:mb-4 font-bold">
               {problem.title}
             </h1>
-            <p className="text-lg  mb-6">{problem.description}</p>
+            <div className="p-2 sm:p-4 md:p-6">
+              {isProblemSolved === true ? (
+                <PerformanceChart times={time} memory={memory} />
+              ) : (
+                <>
+                  <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6">
+                    {problem.description}
+                  </p>
 
-            {problem.examples && (
-              <>
-                <h3 className="text-xl font-bold mb-4">Examples:</h3>
-                {Object.entries(problem.examples).map(
-                  ([lang, example], idx) => (
-                    <div
-                      key={lang}
-                      className="bg-white dark:bg-gray-900 shadow-2xl  rounded-xl border border-gray-200 dark:border-gray-700 p-6  mb-6 font-mono"
-                    >
-                      <div className="mb-4 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                        <div className="text-indigo-300 mb-2 text-base font-semibold ">
-                          Input:
-                        </div>
-                        <span className="text-black dark:text-white px-4 py-1 rounded-lg font-semibold ">
-                          {example.input}
-                        </span>
-                      </div>
-                      <div className="mb-4 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                        <div className="text-indigo-300 mb-2 text-base font-semibold ">
-                          Output:
-                        </div>
-                        <span className="text-black dark:text-white px-4 py-1 rounded-lg font-semibold  ">
-                          {example.output}
-                        </span>
-                      </div>
-                      {example.explanation && (
-                        <div>
-                          <div className="text-emerald-300 mb-2 text-base font-semibold">
-                            Explanation:
+                  {problem.examples && (
+                    <>
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-4">
+                        Examples:
+                      </h3>
+                      {Object.entries(problem.examples).map(
+                        ([lang, example]) => (
+                          <div
+                            key={lang}
+                            className="bg-white dark:bg-gray-900 shadow-2xl rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 p-3 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6 font-mono"
+                          >
+                            <div className="mb-3 sm:mb-4 bg-gray-100 dark:bg-gray-800 p-2 sm:p-3 md:p-4 rounded-lg">
+                              <div className="text-indigo-300 mb-1 sm:mb-2 text-sm sm:text-base font-semibold">
+                                Input:
+                              </div>
+                              <span className="text-black dark:text-white px-2 sm:px-4 py-1 rounded-lg font-semibold text-xs sm:text-sm md:text-base">
+                                {example.input}
+                              </span>
+                            </div>
+                            <div className="mb-3 sm:mb-4 bg-gray-100 dark:bg-gray-800 p-2 sm:p-3 md:p-4 rounded-lg">
+                              <div className="text-indigo-300 mb-1 sm:mb-2 text-sm sm:text-base font-semibold">
+                                Output:
+                              </div>
+                              <span className="text-black dark:text-white px-2 sm:px-4 py-1 rounded-lg font-semibold text-xs sm:text-sm md:text-base">
+                                {example.output}
+                              </span>
+                            </div>
+                            {example.explanation && (
+                              <div>
+                                <div className="text-emerald-300 mb-1 sm:mb-2 text-sm sm:text-base font-semibold">
+                                  Explanation:
+                                </div>
+                                <p className="text-black dark:text-white text-sm sm:text-base md:text-lg font-sem bg-gray-100 dark:bg-gray-800 p-2 sm:p-3 md:p-4 rounded-lg">
+                                  {example.explanation}
+                                </p>
+                              </div>
+                            )}
                           </div>
-                          <p className="text-black dark:text-white text-lg font-sem bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                            {example.explanation}
-                          </p>
-                        </div>
+                        )
                       )}
-                    </div>
-                  )
-                )}
-              </>
-            )}
+                    </>
+                  )}
 
-            {problem.constraints && (
-              <>
-                <h3 className="text-xl font-bold mb-4 ">Constraints:</h3>
-                <div className="bg-white dark:bg-gray-900 shadow-2xl   border border-gray-200 dark:border-gray-700 p-6 rounded-xl mb-6 ">
-                  <span className="text-black dark:text-white px-4 py-1 rounded-lg font-semibold  text-lg bg-gray-100 dark:bg-gray-800 p-4 ">
-                    {problem.constraints}
-                  </span>
-                </div>
-              </>
-            )}
+                  {problem.constraints && (
+                    <>
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-4">
+                        Constraints:
+                      </h3>
+                      <div className="bg-white dark:bg-gray-900 shadow-2xl border border-gray-200 dark:border-gray-700 p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl mb-3 sm:mb-4 md:mb-6">
+                        <span className="text-black dark:text-white px-2 sm:px-4 py-1 rounded-lg font-semibold text-sm sm:text-base md:text-lg bg-gray-100 dark:bg-gray-800 p-2 sm:p-3 md:p-4">
+                          {problem.constraints}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         );
+
       case "submissions":
         return (
           <SubmissionsList
@@ -243,71 +260,90 @@ const ProblemPage = () => {
             isLoading={isSubmissionsLoading}
           />
         );
+
       case "discussion":
         return (
-          <div className="p-4 text-center text-base-content/70">
+          <div className="p-4 text-center text-base-content/70 text-sm sm:text-base">
             No discussions yet
           </div>
         );
+
       case "hints":
         return (
-          <div className="p-4">
+          <div className="p-2 sm:p-4">
             {problem?.hints ? (
-              <div className="bg-base-200 p-6 rounded-xl">
-                <span className="bg-black/90 px-4 py-1 rounded-lg font-semibold text-white text-lg">
+              <div className="bg-base-200 p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl">
+                <span className="bg-black/90 px-2 sm:px-4 py-1 rounded-lg font-semibold text-white text-sm sm:text-base md:text-lg">
                   {problem.hints}
                 </span>
               </div>
             ) : (
-              <div className="text-center text-base-content/70">
+              <div className="text-center text-base-content/70 text-sm sm:text-base">
                 No hints available
               </div>
             )}
           </div>
         );
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 shadow-2xl  rounded-xl border border-gray-200 dark:border-gray-700  max-w-[99%] w-full">
-      <nav className="navbar bg-white dark:bg-gray-900 shadow-2xl rounded-t-xl  border border-gray-200 dark:border-gray-700  px-4">
-        <div className="flex-1 gap-2">
+    <div className="min-h-screen bg-white dark:bg-gray-900 shadow-2xl rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 max-w-[99%] w-full">
+      <nav className="navbar bg-white dark:bg-gray-900 shadow-2xl rounded-t-lg sm:rounded-t-xl border border-gray-200 dark:border-gray-700 px-2 sm:px-4">
+        <div className="flex-1 gap-1 sm:gap-2">
           <Link
             to={"/dashboard"}
-            className="flex items-center gap-2 text-primary"
+            className="flex items-center gap-1 sm:gap-2 text-primary text-sm sm:text-base"
           >
-            <ChevronLeft className="w-4 h-4" />
-            Back
-            {/* <Home /> */}
+            <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden xs:inline">Back</span>
           </Link>
-          <div className="mt-2">
-            <div className="flex items-center gap-2 text-sm sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl sm:mt-4 md:mt-6 dark:text-gray-400 text-gray-900">
-              <Clock className="w-4 h-4" />
-              <span>
+          <div className="mt-1 sm:mt-2">
+            <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl dark:text-gray-400 text-gray-900 flex-wrap">
+              <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="whitespace-nowrap">
                 Updated{" "}
-                {new Date(problem.createdAt).toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                <span className="hidden sm:inline">
+                  {new Date(problem.createdAt).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+                <span className="sm:hidden">
+                  {new Date(problem.createdAt).toLocaleString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
               </span>
-              <span className="text-base-content/30">•</span>
-              <Users className="w-4 h-4" />
-              <span>{submissionCount} Submissions</span>
-              <span className="text-base-content/30">•</span>
-              <ThumbsUp className="w-4 h-4" />
-              <span>{successRate || 0}% Success Rate</span>
+              <span className="text-base-content/30 hidden sm:inline">•</span>
+              <Users className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="whitespace-nowrap">
+                {submissionCount}{" "}
+                <span className="hidden sm:inline">Submissions</span>
+                <span className="sm:hidden">Sub</span>
+              </span>
+              <span className="text-base-content/30 hidden md:inline">•</span>
+              <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 hidden md:inline" />
+              <span className="whitespace-nowrap hidden md:inline">
+                {successRate || 0}% Success Rate
+              </span>
             </div>
           </div>
         </div>
-        <div className="flex flex-row">
-          <button onClick={handleShare} className="btn btn-ghost btn-circle">
-            <Share2 className="w-8 h-8 text-blue-500 " />
+        <div className="flex flex-row gap-1 sm:gap-2">
+          <button
+            onClick={handleShare}
+            className="btn btn-ghost btn-circle btn-sm sm:btn-md"
+          >
+            <Share2 className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-blue-500" />
           </button>
           <select
-            className="selec text-gray-900  dark:text-white dark:bg-gray-800 w-40 rounded-lg border border-gray-200 dark:border-gray-700 "
+            className="text-gray-900 dark:text-white dark:bg-gray-800 w-24 sm:w-32 md:w-40 rounded-lg border border-gray-200 dark:border-gray-700 text-xs sm:text-sm md:text-base px-1 sm:px-2"
             value={selectedLanguage}
             onChange={handleLanguageChange}
           >
@@ -320,69 +356,73 @@ const ProblemPage = () => {
         </div>
       </nav>
 
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="card bg-white dark:bg-gray-900 shadow-2xl  rounded-xl border border-gray-200 dark:border-gray-700 ">
+      <div className="container mx-auto p-2 sm:p-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+          <div className="card bg-white dark:bg-gray-900 shadow-2xl rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700">
             <div className="card-body p-0">
-              <div className="border-b border-gray-300 dark:border-gray-700 flex space-x-4">
+              <div className="border-b border-gray-300 dark:border-gray-700 flex space-x-2 sm:space-x-4 overflow-x-auto">
                 <button
-                  className={`py-2 px-4 flex items-center gap-2  transition-colors duration-200 hover:text-primary ${
+                  className={`py-2 px-2 sm:px-4 flex items-center gap-1 sm:gap-2 transition-colors duration-200 hover:text-primary text-xs sm:text-sm md:text-base whitespace-nowrap ${
                     activeTab === "description" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("description")}
                 >
-                  <FileText className="w-4 h-4" />
-                  Description
+                  <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Description</span>
+                  <span className="sm:hidden">Desc</span>
                 </button>
                 <button
-                  className={`py-2 px-4 flex items-center gap-2  transition-colors duration-200 hover:text-primary ${
+                  className={`py-2 px-2 sm:px-4 flex items-center gap-1 sm:gap-2 transition-colors duration-200 hover:text-primary text-xs sm:text-sm md:text-base whitespace-nowrap ${
                     activeTab === "submissions" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("submissions")}
                 >
-                  <Code2 className="w-4 h-4" />
-                  Submissions
+                  <Code2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Submissions</span>
+                  <span className="sm:hidden">Sub</span>
                 </button>
                 <button
-                  className={`py-2 px-4 flex items-center gap-2  transition-colors duration-200 hover:text-primary ${
+                  className={`py-2 px-2 sm:px-4 flex items-center gap-1 sm:gap-2 transition-colors duration-200 hover:text-primary text-xs sm:text-sm md:text-base whitespace-nowrap ${
                     activeTab === "discussion" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("discussion")}
                 >
-                  <MessageSquare className="w-4 h-4" />
-                  Discussion
+                  <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Discussion</span>
+                  <span className="sm:hidden">Disc</span>
                 </button>
                 <button
-                  className={`py-2 px-4 flex items-center gap-2 transition-colors duration-200 hover:text-primary ${
+                  className={`py-2 px-2 sm:px-4 flex items-center gap-1 sm:gap-2 transition-colors duration-200 hover:text-primary text-xs sm:text-sm md:text-base whitespace-nowrap ${
                     activeTab === "hints" ? "tab-active text-primary" : ""
                   }`}
                   onClick={() => setActiveTab("hints")}
                 >
-                  <Lightbulb className="w-4 h-4" />
+                  <Lightbulb className="w-3 h-3 sm:w-4 sm:h-4" />
                   Hints
                 </button>
               </div>
 
-              <div className="p-6">
-                {isProblemSolved === true ? (
+              <div className="p-3 sm:p-4 md:p-6">
+                {/* {isProblemSolved === true ? (
                   <PerformanceChart times={time} memory={memory} />
-                ) : (
-                  renderTabContent()
-                )}
+                ) : ( */}
+                {renderTabContent()}
+                {/* )} */}
               </div>
             </div>
           </div>
 
-          <div className="card bg-white dark:bg-gray-900 shadow-2xl  rounded-xl border border-gray-200 p-2 dark:border-gray-700  ">
+          <div className="card bg-white dark:bg-gray-900 shadow-2xl rounded-lg sm:rounded-xl border border-gray-200 p-1 sm:p-2 dark:border-gray-700">
             <div className="card-body p-0">
               <div className="tabs tabs-bordered">
-                <button className="tab tab-active gap-2">
-                  <Terminal className="w-4 h-4" />
-                  Code Editor
+                <button className="tab tab-active gap-1 sm:gap-2 text-xs sm:text-sm md:text-base">
+                  <Terminal className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Code Editor</span>
+                  <span className="sm:hidden">Editor</span>
                 </button>
               </div>
 
-              <div className="h-[600px] w-full">
+              <div className="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full">
                 <Editor
                   height="100%"
                   language={selectedLanguage.toLowerCase()}
@@ -390,47 +430,66 @@ const ProblemPage = () => {
                   value={code}
                   onChange={(value) => setCode(value || "")}
                   options={{
-                    minimap: { enabled: false },
-                    fontSize: 20,
+                    minimap: { enabled: window.innerWidth > 768 },
+                    fontSize:
+                      window.innerWidth < 640
+                        ? 12
+                        : window.innerWidth < 768
+                        ? 14
+                        : window.innerWidth < 1024
+                        ? 16
+                        : 18,
                     lineNumbers: "on",
                     roundedSelection: false,
                     scrollBeyondLastLine: false,
                     readOnly: false,
                     automaticLayout: true,
-                    padding: { top: 20, bottom: 10 },
+                    padding: {
+                      top:
+                        window.innerWidth < 640
+                          ? 10
+                          : window.innerWidth < 768
+                          ? 15
+                          : 20,
+                      bottom: window.innerWidth < 640 ? 5 : 10,
+                    },
                     language: selectedLanguage.toLowerCase(),
+                    wordWrap: window.innerWidth < 768 ? "on" : "off",
                   }}
                 />
               </div>
 
-              <div className="p-4 bg-white dark:bg-gray-900 shadow-2xl  rounded-xl border border-gray-200 dark:border-gray-700">
-                <div className="flex justify-between items-center">
-                  {/* <button className="btn btn-success gap-2">Run Code</button> */}
+              <div className="p-2 sm:p-3 md:p-4 bg-white dark:bg-gray-900 shadow-2xl rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
                   <button
-                    className="btn btn-primary gap-2"
+                    className="btn btn-primary gap-1 sm:gap-2 btn-sm sm:btn-md w-full sm:w-auto text-xs sm:text-sm"
                     onClick={handleRunCodes}
                     disabled={isRunning}
                   >
                     {isRunning ? (
-                      <Loader className="w-6 h-5 animate-spin text-black" />
+                      <Loader className="w-3 h-3 sm:w-4 sm:h-4 md:w-6 md:h-5 animate-spin text-black" />
                     ) : (
                       <>
-                        <Play className="w-4 h-4" />
-                        Run Code
+                        <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden xs:inline">Run Code</span>
+                        <span className="xs:hidden">Run</span>
                       </>
                     )}
                   </button>
                   <button
-                    className="btn btn-primary gap-2"
+                    className="btn btn-primary gap-1 sm:gap-2 btn-sm sm:btn-md w-full sm:w-auto text-xs sm:text-sm"
                     onClick={handleSubmitCode}
                     disabled={isExecuting}
                   >
                     {isExecuting ? (
-                      <Loader className="w-6 h-5 animate-spin text-black" />
+                      <Loader className="w-3 h-3 sm:w-4 sm:h-4 md:w-6 md:h-5 animate-spin text-black" />
                     ) : (
                       <>
-                        <Play className="w-4 h-4" />
-                        Submit Solution
+                        <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden xs:inline">
+                          Submit Solution
+                        </span>
+                        <span className="xs:hidden">Submit</span>
                       </>
                     )}
                   </button>
@@ -440,23 +499,25 @@ const ProblemPage = () => {
           </div>
         </div>
 
-        <div className="card bg-white dark:bg-gray-900 shadow-2xl  rounded-xl border border-gray-200 dark:border-gray-700 mt-6">
-          <div className="card-body">
+        <div className="card bg-white dark:bg-gray-900 shadow-2xl rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 mt-3 sm:mt-4 md:mt-6">
+          <div className="card-body p-3 sm:p-4 md:p-6">
             {submission ? (
               <Submission submission={submission} />
             ) : (
               <>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold">Test Cases</h3>
+                <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold">
+                    Test Cases
+                  </h3>
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="table  w-full bg-white dark:bg-gray-900 shadow-2xl  rounded-xl  dark:border-gray-700 text-black dark:text-white">
+                  <table className="table w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg sm:rounded-xl dark:border-gray-700 text-black dark:text-white text-xs sm:text-sm md:text-base">
                     <thead>
                       <tr>
-                        <th className="text-gray-900  dark:text-white ">
+                        <th className="text-gray-900 dark:text-white text-xs sm:text-sm md:text-base">
                           Input
                         </th>
-                        <th className="text-gray-900  dark:text-white">
+                        <th className="text-gray-900 dark:text-white text-xs sm:text-sm md:text-base">
                           Expected Output
                         </th>
                       </tr>
@@ -467,10 +528,10 @@ const ProblemPage = () => {
                           key={index}
                           className="hover:bg-gray-100 dark:hover:bg-gray-800"
                         >
-                          <td className="font-mono text-gray-900  dark:text-white  ">
+                          <td className="font-mono text-gray-900 dark:text-white text-xs sm:text-sm md:text-base break-all">
                             {testCase.input}
                           </td>
-                          <td className="font-mono text-gray-900  dark:text-white">
+                          <td className="font-mono text-gray-900 dark:text-white text-xs sm:text-sm md:text-base break-all">
                             {testCase.output}
                           </td>
                         </tr>
