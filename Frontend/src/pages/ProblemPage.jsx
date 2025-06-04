@@ -30,6 +30,7 @@ import SubmissionsList from "../components/SubmissionList";
 import useThemeStore from "../store/useThemeStore";
 import PerformanceChart from "../components/PerformanceChart";
 import { toast } from "sonner";
+import DiscussionSection from "../components/DiscussionSection";
 
 const ProblemPage = () => {
   const { id } = useParams();
@@ -263,8 +264,8 @@ const ProblemPage = () => {
 
       case "discussion":
         return (
-          <div className="p-4 font-lexend   text-center text-base-content/70 text-sm sm:text-base">
-            No discussions yet
+          <div className="p-4 font-lexend text-center text-base-content/70 text-sm sm:text-base max-h-[110vh] overflow-y-auto overflow-x-hidden">
+            <DiscussionSection problemId={problem.id} />
           </div>
         );
 

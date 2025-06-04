@@ -8,7 +8,7 @@ const ProtectedLayout = () => {
   return (
     <div className="flex flex-col min-h-screen bg-[#fafafa] text-black dark:bg-[#11111a] dark:text-white transition-colors duration-300">
       <Navbar />
-      <ToggleTheme />
+
       <main className="p-4 flex-grow">
         <Outlet />
       </main>

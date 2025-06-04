@@ -32,7 +32,6 @@ export const useAuthStore = create((set) => ({
   fetchProfile: async () => {
     set({ isLoadingProfile: true, profileError: null });
     try {
-      // Agar aapka backend me /auth/profile hai to use karo, warna /auth/check bhi ho sakta hai
       const res = await axiosInstance.get(`/auth/profile`);
       set({ profile: res.data.data, isLoadingProfile: false });
     } catch (error) {
