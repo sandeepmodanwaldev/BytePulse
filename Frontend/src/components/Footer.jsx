@@ -33,7 +33,7 @@ function Footer() {
 
         {/* Right Side - Copyright */}
         <p className="text-xs text-gray-400 text-center md:text-right">
-          &copy; {new Date().getFullYear()} YourSite. All rights reserved.
+          &copy; {new Date().getFullYear()} BytePulse. All rights reserved.
         </p>
       </div>
     </footer>

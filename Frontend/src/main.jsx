@@ -29,6 +29,9 @@ import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import PublicLayout from "./layout/PublicLayout.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import PlaylistDetailsPage from "./pages/PlaylistPage.jsx";
+import About from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
+import Privacy from "./pages/Privacy.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,6 +52,9 @@ const router = createBrowserRouter(
               path="/reset-password/:token"
               element={<ResetPasswordPage />}
             />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
           </Route>
         </Route>
 
