@@ -9,6 +9,7 @@ import {
   resetPassword,
   refeshToken,
   checkuser,
+  uploadAvatar,
 } from "../controller/auth.controller.js";
 import {
   userRegistrationValidator,
@@ -18,7 +19,7 @@ import {
 } from "../validator/index.js";
 import { validator } from "../middleware/validator.middleware.js";
 import { isLoggedIn } from "../middleware/auth.middleware.js";
-
+import avatarUpload from "../middleware/multer.middleware.js";
 const router = Router();
 
 router.post("/register", userRegistrationValidator(), validator, registration);
@@ -40,5 +41,11 @@ router.post(
   resetPassword
 );
 router.get("/refeshToken", refeshToken);
+router.put(
+  "/profile/avatar",
+  isLoggedIn,
+  avatarUpload.single("avatar"),
+  uploadAvatar
+);
 
 export default router;

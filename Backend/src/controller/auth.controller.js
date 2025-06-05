@@ -11,7 +11,8 @@ import {
 } from "../libs/mail.js";
 import crypto from "crypto";
 import { generateAccessAndRefereshTokens } from "../libs/generate-access-and-referesh-tokens.js";
-import { log } from "console";
+import cloudinary from "../libs/cloudinary.js";
+import streamifier from "streamifier";
 
 export const registration = async (req, res) => {
   const { username, email, password } = req.body;
@@ -389,5 +390,42 @@ export const checkuser = async (req, res) => {
     res
       .status(500)
       .json(new ApiError(500, "Error checking user", error.message));
+  }
+};
+
+export const uploadAvatar = async (req, res) => {
+  const userId = req.user.id;
+
+  if (!req.file) {
+    return res.status(400).json(new ApiError(400, "No file uploaded"));
+  }
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "avatars",
+          resource_type: "image",
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+
+      streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+    });
+
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { avatar: result.secure_url },
+    });
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, user, "Avatar uploaded to Cloudinary"));
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    res.status(500).json(new ApiError(500, "Failed to upload avatar"));
   }
 };

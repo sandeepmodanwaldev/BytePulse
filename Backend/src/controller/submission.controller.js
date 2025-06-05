@@ -78,3 +78,44 @@ export const getSubmissionCount = async (req, res) => {
       .json(new ApiError(500, "Error fetched submission count", error.message));
   }
 };
+
+export const getSubmissionForAllAcceptedProblem = async (req, res) => {
+  const { problemId } = req.params;
+
+  try {
+    // Count total submissions for the given problem
+    const totalCount = await db.submission.count({
+      where: { problemId },
+    });
+    if (!problemId) {
+      return res.status(400).json(new ApiError(400, "Problem ID is required"));
+    }
+    // Count accepted submissions for the given problem
+    const acceptedCount = await db.submission.count({
+      where: {
+        problemId,
+        status: "Accepted",
+      },
+    });
+
+    // Send response
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          totalCount: totalCount || 0,
+          acceptedCount: acceptedCount || 0,
+        },
+        "All Accepted count fetch successfully "
+      )
+    );
+  } catch (error) {
+    console.log("error", error);
+
+    res
+      .status(500)
+      .json(
+        new ApiError(500, "Somthing wrong feaching in accpted problem", error)
+      );
+  }
+};

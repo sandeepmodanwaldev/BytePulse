@@ -8,6 +8,7 @@ export const useSubmissionStore = create((set, get) => ({
   submission: null,
   submissionCount: null,
   allsubmission: [],
+  submissionAcceptCount: 0,
 
   getAllSubmissions: async () => {
     try {
@@ -51,6 +52,22 @@ export const useSubmissionStore = create((set, get) => ({
     } catch (error) {
       console.log("Error getting submission count for problem", error);
       toast.error("Error getting submission count for problem");
+    }
+  },
+  getSubmissionForAllAcceptedProblem: async (problemId) => {
+    try {
+      set({ isLoading: true });
+      const res = await axiosInstance.get(
+        `/submission/get-submission-count-all-accepted-problem/${problemId}`
+      );
+      console.log(res);
+
+      set({ submissionAcceptCount: res.data.data });
+    } catch (error) {
+      console.log("Error fetching all accepted problem", error);
+      toast.error("Error fetching all accepted problem");
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

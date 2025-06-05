@@ -6,7 +6,7 @@ import LogoutPage from "../pages/Auth/LogoutPage";
 import ToggleTheme from "../pages/landing/ToogleTheam";
 
 function Navbar() {
-  const { authUser } = useAuthStore();
+  const { authUser, profile } = useAuthStore();
 
   return (
     <>
@@ -30,10 +30,10 @@ function Navbar() {
                     tabIndex={0}
                     className="btn btn-ghost btn-circle avatar flex flex-row"
                   >
-                    <div className="w-10 rounded-full hover:scale-140 ">
+                    <div className="w-10 rounded-full hover:scale-140 border-2 border-gray-300">
                       <img
                         src={
-                          authUser?.image ||
+                          profile?.avatar ||
                           "https://avatar.iran.liara.run/public/boy"
                         }
                         alt="User Avatar"

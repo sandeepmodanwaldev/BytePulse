@@ -52,10 +52,10 @@ const router = createBrowserRouter(
               path="/reset-password/:token"
               element={<ResetPasswordPage />}
             />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy" element={<Privacy />} />
           </Route>
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
         </Route>
 
         {/* Protected Layout + Auth Routes */}

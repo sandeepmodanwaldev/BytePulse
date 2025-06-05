@@ -14,12 +14,12 @@ export const useAuthStore = create((set) => ({
   isVerifying: false,
   isLoadingProfile: false,
   profileError: null,
+  isUploadingAvatar: false,
 
   checkAuth: async () => {
     set({ isCheckingAuth: true });
     try {
       const res = await axiosInstance.get(`/auth/check`);
-
       set({ authUser: res.data.data });
     } catch (error) {
       console.log("CheckAuth error", error);
@@ -43,28 +43,28 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  signup: async (data, nevigate) => {
+  signup: async (data, navigate) => {
     set({ isSigninUp: true });
     try {
       const res = await axiosInstance.post(`/auth/register`, data);
       toast.success(res.data.message);
-      nevigate("/");
+      navigate("/");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Signup failed");
     } finally {
       set({ isSigninUp: false });
     }
   },
 
-  login: async (data, nevigate) => {
+  login: async (data, navigate) => {
     set({ isloggingIn: true });
     try {
       const res = await axiosInstance.post(`/auth/login`, data);
       set({ authUser: res.data.data });
       toast.success(res.data.message);
-      nevigate("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Login failed");
     } finally {
       set({ isloggingIn: false });
     }
@@ -95,13 +95,13 @@ export const useAuthStore = create((set) => ({
       );
       toast.success(res.data.message);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Request failed");
     } finally {
       set({ isForgottingPassword: false });
     }
   },
 
-  resetPassword: async (token, data, nevigate) => {
+  resetPassword: async (token, data, navigate) => {
     set({ isResettingPassword: true });
     try {
       const res = await axiosInstance.post(
@@ -109,7 +109,7 @@ export const useAuthStore = create((set) => ({
         data
       );
       toast.success(res.data.message || "Password reset successful!");
-      nevigate("/login");
+      navigate("/login");
     } catch (error) {
       toast.error(error.response?.data?.message || "Reset failed");
     } finally {
@@ -129,6 +129,28 @@ export const useAuthStore = create((set) => ({
       toast.error(error.response?.data?.message || "Invalid or expired token");
     } finally {
       set({ isVerifying: false });
+    }
+  },
+
+  uploadAvatar: async (file) => {
+    const formData = new FormData();
+    formData.append("avatar", file); // 👈 MUST match multer field name
+
+    try {
+      set({ isUploadingAvatar: true });
+      const res = await axiosInstance.put(`/auth/profile/avatar`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success(res.data.message || "Avatar uploaded!");
+      set({ profile: res.data.data });
+    } catch (error) {
+      console.error("Avatar upload error:", error);
+      toast.error(error.response?.data?.message || "Avatar upload failed");
+    } finally {
+      set({ isUploadingAvatar: false });
     }
   },
 }));

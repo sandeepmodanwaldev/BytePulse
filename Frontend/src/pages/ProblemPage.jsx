@@ -43,6 +43,8 @@ const ProblemPage = () => {
     getSubmissionCountForProblem,
     submissionCount,
     allsubmission,
+    submissionAcceptCount,
+    getSubmissionForAllAcceptedProblem,
   } = useSubmissionStore();
 
   const [code, setCode] = useState("");
@@ -61,8 +63,8 @@ const ProblemPage = () => {
 
   const passedTests = submission?.testcases.filter((tc) => tc.passed).length;
 
-  const totalTests = submission?.testcases.length;
-  const successRate = (passedTests / totalTests) * 100;
+  const { totalCount, acceptedCount } = submissionAcceptCount;
+  const successRate = Math.round((acceptedCount / totalCount) * 100) || 0;
 
   const location = useLocation();
   const handleShare = async () => {
@@ -87,6 +89,7 @@ const ProblemPage = () => {
     getProblemById(id);
     getSubmissionCountForProblem(id);
     getSubmissionForProblem(id);
+    getSubmissionForAllAcceptedProblem(id);
   }, [id]);
 
   useEffect(() => {

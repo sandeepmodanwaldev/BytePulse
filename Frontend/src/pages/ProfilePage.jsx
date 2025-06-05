@@ -1,14 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore.js";
 import { useSubmissionStore } from "../store/useSubmissionStore.js";
 import { useProblemStore } from "../store/useProblemStore.js";
 import { usePlaylistStore } from "../store/usePlaylistStore.js";
 import { Editor } from "@monaco-editor/react";
 import { useNavigate } from "react-router-dom";
-import { User } from "lucide-react";
+import { toast } from "sonner";
+
 function ProfilePage() {
-  const { profile, fetchProfile, isLoadingProfile, profileError } =
-    useAuthStore();
+  const {
+    profile,
+    fetchProfile,
+    isLoadingProfile,
+    profileError,
+    uploadAvatar,
+    isUploadingAvatar,
+  } = useAuthStore();
+
+  const fileInputRef = useRef(null);
+  const [preview, setPreview] = useState(null);
+  const [file, setFile] = useState(null);
   const [openIndex, setOpenIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -35,13 +46,30 @@ function ProfilePage() {
     getAllSolveProblemCount();
     getAccuracy();
     getAllPlaylists();
-  }, [
-    fetchProfile,
-    getAllSubmissions,
-    getAllSolveProblemCount,
-    getAccuracy,
-    getAllPlaylists,
-  ]);
+  }, []);
+
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleChange = (e) => {
+    const selected = e.target.files[0];
+    if (!selected) return;
+    if (!selected.type.startsWith("image/")) {
+      toast.error("Only image files are allowed.");
+      return;
+    }
+    setFile(selected);
+    setPreview(URL.createObjectURL(selected));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) return toast.error("Please select an image");
+    await uploadAvatar(file);
+    setFile(null);
+    setPreview(null);
+  };
 
   if (isLoadingProfile || isLoading) {
     return (
@@ -69,24 +97,52 @@ function ProfilePage() {
 
   return (
     <div className="m-4 md:m-10 p-8 dark:border dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 dark:text-white shadow-md">
-      {/* Profile Header */}{" "}
       <h1 className="text-center text-xl md:text-3xl mb-8 font-bold font-inter">
         Your Profile Section
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="flex flex-col items-center relative">
-          <img
-            src={profile.avatar || "https://avatar.iran.liara.run/public/boy"}
-            alt="User Avatar"
-            className="w-40 h-40 rounded-full object-cover border-4 border-orange-400"
-          />
+          <div
+            onClick={handleClick}
+            className="relative w-32 h-32 rounded-full border-4 border-orange-500 overflow-hidden cursor-pointer group transition duration-300"
+          >
+            <img
+              src={preview || profile?.avatar || "/default-avatar.png"}
+              alt="Avatar"
+              className="w-full h-full object-cover group-hover:opacity-60 transition duration-300"
+            />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 bg-black bg-opacity-40 text-sm font-medium">
+              Change
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleChange}
+              ref={fileInputRef}
+              hidden
+            />
+
+            {file && (
+              <button
+                type="submit"
+                disabled={isUploadingAvatar}
+                className="bg-blue-600 hover:bg-blue-700 transition duration-300 px-4 py-2 rounded text-white font-semibold"
+              >
+                {isUploadingAvatar ? "Uploading..." : "Upload Avatar"}
+              </button>
+            )}
+          </form>
+
           {profile.role?.toUpperCase() === "ADMIN" && (
-            <span className="absolute -bottom-3 px-3 font-inter py-1 text-sm bg-red-600 text-white rounded-full shadow-md">
+            <span className="absolute -bottom-3 px-3 py-1 text-sm bg-red-600 text-white rounded-full shadow-md font-inter">
               ADMIN
             </span>
           )}
           {profile.role?.toUpperCase() === "USER" && (
-            <span className="absolute -bottom-3 px-3 font-inter py-1 text-sm bg-red-600 text-white rounded-full shadow-md">
+            <span className="absolute -bottom-3 px-3 py-1 text-sm bg-red-600 text-white rounded-full shadow-md font-inter">
               USER
             </span>
           )}
@@ -94,19 +150,16 @@ function ProfilePage() {
 
         <div className="space-y-4 text-lg md:text-xl font-[Inter]">
           <p>
-            <span className="font-semibold font-[Inter]">Username:</span>{" "}
-            {profile.username}
+            <span className="font-semibold">Username:</span> {profile.username}
           </p>
           <p>
-            <span className="font-semibold font-[Inter]">Email:</span>{" "}
-            {profile.email}
+            <span className="font-semibold">Email:</span> {profile.email}
           </p>
           <p>
-            <span className="font-semibold font-[Inter]">Role:</span>{" "}
-            {profile.role}
+            <span className="font-semibold">Role:</span> {profile.role}
           </p>
           <p>
-            <span className="font-semibold font-[Inter]">Verify Email:</span>{" "}
+            <span className="font-semibold">Verify Email:</span>{" "}
             <span
               className={
                 profile.isEmailVerification ? "text-green-500" : "text-red-500"
@@ -116,11 +169,12 @@ function ProfilePage() {
             </span>
           </p>
           <p>
-            <span className="text-semibold">Total Submissions:</span>{" "}
+            <span className="font-semibold">Total Submissions:</span>{" "}
             {submissionCount ?? submissions.length}
           </p>
         </div>
       </div>
+
       {/* Submission History */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4">
@@ -153,7 +207,7 @@ function ProfilePage() {
                 {openIndex === index && (
                   <>
                     <Editor
-                      height={faq.sourceCode.length || "300"}
+                      height="300px"
                       theme="vs-dark"
                       value={faq.sourceCode}
                       options={{
@@ -206,6 +260,7 @@ function ProfilePage() {
           </div>
         </div>
       </section>
+
       {/* Problem Stats */}
       <div className="mt-4 grid grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border dark:border-gray-700 shadow-2xl">
@@ -221,6 +276,7 @@ function ProfilePage() {
           <p className="text-xl font-inter">{accuracy?.accuracy || 0}</p>
         </div>
       </div>
+
       {/* Playlist Section */}
       <div className="mt-16">
         <h2 className="text-center text-xl md:text-3xl mb-8 font-bold font-inter">
@@ -275,7 +331,7 @@ function ProfilePage() {
                         <div className="flex justify-end gap-4">
                           <button
                             onClick={() => setShowModal(false)}
-                            className="px-4 py-2 bg-gray-200 font-inter dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 font-inter"
                           >
                             Cancel
                           </button>
